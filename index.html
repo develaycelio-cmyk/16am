@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>16am — Diagnostics & États des lieux</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ── CHARTE OFFICIELLE BRANDBOOK 16AM ── */
+:root{
+  --blue:#003853;
+  --blue-mid:#004f73;
+  --blue-dark:#001f2e;
+  --green:#34ff9a;
+  --violet:#7b4cfd;
+  --white:#ffffff;
+  --off:#f4f7f9;
+  --gray:#64748b;
+  --border:#e2e8f0;
+  --grad:linear-gradient(135deg,#34ff9a 0%,#7b4cfd 100%);
+  --orb:linear-gradient(135deg,#34e8c8 0%,#7b4cfd 100%);
+  --font:'Plus Jakarta Sans',sans-serif;
+  --r:12px;--rl:20px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--font);color:var(--blue-dark);background:var(--white);-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+a{text-decoration:none;color:inherit;}
+button{cursor:pointer;font-family:var(--font);}
+
+/* ── NAVBAR ── */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:999;
+  height:70px;background:rgba(0,20,38,.97);backdrop-filter:blur(14px);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 60px;border-bottom:1px solid rgba(255,255,255,.06);
+}
+.nav-logo{cursor:pointer;display:flex;flex-direction:column;gap:3px;}
+.nav-pill{
+  background:#001f2e;border:1.5px solid rgba(255,255,255,.15);
+  border-radius:50px;padding:6px 16px 6px 7px;
+  display:inline-flex;align-items:center;gap:8px;
+}
+.nav-orb{width:30px;height:30px;border-radius:50%;background:var(--orb);flex-shrink:0;}
+.nav-name{font-size:20px;font-weight:800;color:var(--white);letter-spacing:-.3px;}
+.nav-base{font-size:10px;font-weight:600;color:rgba(255,255,255,.4);letter-spacing:.5px;display:flex;align-items:center;gap:4px;padding-left:2px;}
+.nav-dot{width:5px;height:5px;border-radius:50%;background:var(--violet);}
+.nav-links{display:flex;gap:2px;list-style:none;}
+.nav-links a{font-size:13.5px;color:rgba(255,255,255,.65);padding:7px 14px;border-radius:8px;transition:.18s;}
+.nav-links a:hover{background:rgba(255,255,255,.09);color:var(--white);}
+.nav-r{display:flex;gap:9px;align-items:center;}
+.btn-ghost{
+  background:transparent;border:1px solid rgba(255,255,255,.2);
+  color:rgba(255,255,255,.8);padding:8px 16px;border-radius:8px;
+  font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px;transition:.18s;
+}
+.btn-ghost:hover{background:rgba(255,255,255,.08);color:var(--white);}
+.btn-cta{
+  background:var(--green);border:none;color:var(--blue-dark);
+  padding:9px 20px;border-radius:8px;font-size:13px;font-weight:800;transition:.18s;
+}
+.btn-cta:hover{background:#1de87c;transform:translateY(-1px);}
+
+/* ── PAGES ── */
+.page{display:none;padding-top:70px;min-height:100vh;}
+.page.active{display:block;}
+
+/* ── HERO ── */
+.hero{position:relative;min-height:calc(100vh - 70px);display:flex;flex-direction:column;overflow:hidden;}
+.hero-bg{position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=1920&q=80') center/cover no-repeat;z-index:0;}
+.hero-ov{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,10,20,.5) 0%,rgba(0,20,38,.9) 100%);z-index:1;}
+.hero-body{position:relative;z-index:2;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;padding:80px 40px 40px;}
+/* Logo grand dans le hero */
+.hero-logo{display:flex;flex-direction:column;align-items:center;gap:8px;}
+.hero-pill{
+  background:rgba(0,20,38,.65);border:2px solid rgba(255,255,255,.2);
+  border-radius:60px;padding:10px 26px 10px 12px;
+  display:inline-flex;align-items:center;gap:12px;
+  box-shadow:0 0 50px rgba(52,232,200,.1);
+}
+.hero-orb{width:52px;height:52px;border-radius:50%;background:var(--orb);flex-shrink:0;}
+.hero-nm{font-size:44px;font-weight:800;color:var(--white);letter-spacing:-1px;}
+.hero-base{font-size:12px;font-weight:600;color:rgba(255,255,255,.45);letter-spacing:1px;display:flex;align-items:center;gap:5px;}
+.hero-base-dot{width:5px;height:5px;border-radius:50%;background:var(--violet);}
+/* Slogan officiel — toujours vert, 2 lignes */
+.hero-slogan{font-size:clamp(32px,5vw,56px);font-weight:800;color:var(--green);text-align:center;line-height:1.05;letter-spacing:-.5px;}
+.hero-zone{font-size:13px;font-weight:600;color:rgba(255,255,255,.45);letter-spacing:2px;text-transform:uppercase;}
+/* 2 CTA boutons en bas */
+.hero-btns{position:relative;z-index:2;display:flex;width:100%;}
+.hbtn{flex:1;padding:28px 24px;font-family:var(--font);font-size:clamp(15px,2vw,19px);font-weight:800;text-transform:uppercase;letter-spacing:2px;border:none;cursor:pointer;background:var(--green);color:var(--blue-dark);transition:.22s;line-height:1;}
+.hbtn:hover{background:#1de87c;}
+.hbtn-r{flex:1;padding:28px 24px;font-family:var(--font);font-size:clamp(15px,2vw,19px);font-weight:800;text-transform:uppercase;letter-spacing:2px;border:none;border-left:1px solid rgba(255,255,255,.15);cursor:pointer;background:transparent;color:var(--white);transition:.22s;line-height:1;}
+.hbtn-r:hover{background:rgba(255,255,255,.08);}
+
+/* ── STATS ── */
+.stats{background:var(--off);display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--border);}
+.stat{padding:34px 20px;text-align:center;border-right:1px solid var(--border);}
+.stat:last-child{border-right:none;}
+.sv{font-size:38px;font-weight:800;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:block;line-height:1;margin-bottom:5px;}
+.sl{font-size:12px;font-weight:600;color:var(--gray);}
+
+/* ── SECTIONS ── */
+.s{padding:84px 60px;}
+.s-blue{background:var(--blue);padding:84px 60px;}
+.s-gray{background:var(--off);padding:84px 60px;}
+.s-grad{background:var(--grad);padding:84px 60px;text-align:center;}
+.inner{max-width:1200px;margin:0 auto;}
+.sh{text-align:center;margin-bottom:52px;}
+.h2{font-size:34px;font-weight:800;color:var(--blue);line-height:1.15;margin-bottom:10px;}
+.lead{font-size:15px;color:var(--gray);line-height:1.75;max-width:540px;margin:0 auto;}
+
+/* ── PAGE HERO (intérieur) ── */
+.ph{background:var(--blue);padding:68px 60px;text-align:center;}
+.ph-ey{display:inline-block;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--green);margin-bottom:12px;}
+.ph h1{font-size:clamp(26px,5vw,46px);font-weight:800;color:var(--white);line-height:1.15;}
+.ph p{font-size:16px;color:rgba(255,255,255,.6);margin-top:12px;max-width:560px;margin-left:auto;margin-right:auto;}
+
+/* ── PRESTATIONS GRID ── */
+.pg{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+.pc{border:1px solid var(--border);border-radius:var(--rl);padding:22px;display:flex;flex-direction:column;gap:10px;cursor:pointer;transition:.22s;position:relative;overflow:hidden;}
+.pc::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--grad);opacity:0;transition:.22s;}
+.pc:hover{box-shadow:0 8px 32px rgba(0,56,83,.1);transform:translateY(-3px);border-color:rgba(52,255,154,.3);}
+.pc:hover::before{opacity:1;}
+.pc-name{font-size:14px;font-weight:700;color:var(--blue);line-height:1.2;}
+.pc-desc{font-size:12.5px;color:var(--gray);line-height:1.6;flex:1;}
+.pc-lnk{font-size:12.5px;font-weight:700;color:var(--violet);}
+
+/* ── PAGE CHOIX ── */
+.choix-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:840px;margin:0 auto;}
+.choix-blue{background:var(--blue);border-radius:var(--rl);padding:36px;display:flex;flex-direction:column;gap:18px;}
+.choix-off{background:var(--off);border-radius:var(--rl);padding:36px;display:flex;flex-direction:column;gap:18px;}
+.choix-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2px;}
+.choix-h{font-size:20px;font-weight:800;line-height:1.2;}
+.choix-p{font-size:13px;line-height:1.65;}
+.fi{display:flex;flex-direction:column;gap:8px;}
+.fl label{display:block;font-size:11px;font-weight:700;margin-bottom:4px;}
+.fi input{width:100%;border:1.5px solid;padding:11px 14px;font-size:13.5px;font-family:var(--font);border-radius:8px;outline:none;transition:.18s;}
+.fi-dark input{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.15);color:var(--white);}
+.fi-dark input::placeholder{color:rgba(255,255,255,.35);}
+.fi-dark input:focus{border-color:var(--green);}
+.fi-light input{background:var(--white);border-color:var(--border);color:var(--blue);}
+.fi-light input:focus{border-color:var(--violet);}
+.avantage{display:flex;align-items:center;gap:10px;font-size:13.5px;color:var(--gray);}
+.avantage-dot{width:7px;height:7px;border-radius:50%;background:var(--green);flex-shrink:0;}
+.btn-full{width:100%;padding:13px;border-radius:9px;font-family:var(--font);font-size:14px;font-weight:700;border:none;cursor:pointer;transition:.18s;}
+.btn-full-g{background:var(--green);color:var(--blue-dark);}
+.btn-full-g:hover{background:#1de87c;}
+.btn-full-b{background:var(--blue);color:var(--white);}
+.btn-full-b:hover{background:var(--blue-mid);}
+
+/* ── TABS ── */
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:36px;}
+.tab{padding:8px 20px;border-radius:100px;border:1px solid var(--border);background:var(--white);font-family:var(--font);font-size:13px;font-weight:500;color:var(--gray);cursor:pointer;transition:.18s;}
+.tab.active,.tab:hover{background:var(--blue);border-color:var(--blue);color:var(--white);}
+
+/* ── PACKS ── */
+.packs{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;align-items:start;}
+.pack{border:2px solid var(--border);border-radius:var(--rl);padding:30px;position:relative;background:var(--white);}
+.pack.star{border-color:var(--green);box-shadow:0 0 0 4px rgba(52,255,154,.1);}
+.pack-badge{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:var(--green);color:var(--blue-dark);font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:1px;padding:3px 14px;border-radius:100px;white-space:nowrap;}
+.pack h3{font-size:19px;font-weight:800;color:var(--blue);margin-bottom:5px;}
+.pack-sub{font-size:13px;color:var(--gray);margin-bottom:18px;}
+.pack ul{list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:24px;}
+.pack li{font-size:13.5px;color:var(--blue-dark);display:flex;align-items:flex-start;gap:8px;}
+.pack li::before{content:'✓';color:var(--green);font-weight:800;flex-shrink:0;}
+
+/* ── PROCESS ── */
+.process{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;}
+.pstep{text-align:center;}
+.pstep-n{width:50px;height:50px;border-radius:50%;background:var(--grad);color:var(--blue-dark);font-size:19px;font-weight:800;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;}
+.pstep h3{font-size:15px;font-weight:700;color:var(--blue);margin-bottom:7px;}
+.pstep p{font-size:13px;color:var(--gray);line-height:1.6;}
+
+/* ── POURQUOI ── */
+.pq{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;}
+.pq-l h2{font-size:clamp(24px,4vw,36px);font-weight:800;color:var(--white);margin-bottom:26px;}
+.args{display:flex;flex-direction:column;gap:16px;}
+.arg{display:flex;gap:14px;align-items:flex-start;padding-bottom:16px;border-bottom:1px solid rgba(255,255,255,.07);}
+.arg:last-child{border-bottom:none;padding-bottom:0;}
+.arg-dot{width:9px;height:9px;border-radius:50%;background:var(--green);flex-shrink:0;margin-top:5px;}
+.arg h4{font-size:15px;font-weight:700;color:var(--white);margin-bottom:3px;}
+.arg p{font-size:13px;color:rgba(255,255,255,.5);line-height:1.65;}
+.chiffres{background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.1);border-radius:var(--rl);padding:36px;display:grid;grid-template-columns:1fr 1fr;gap:26px;}
+.ch{text-align:center;}
+.chv{font-size:40px;font-weight:800;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:block;line-height:1;margin-bottom:5px;}
+.chl{font-size:12px;font-weight:500;color:rgba(255,255,255,.45);}
+
+/* ── SLOGAN BAND ── */
+.slogan-band{background:var(--blue-dark);padding:72px 60px;text-align:center;}
+.slogan-big{font-size:clamp(36px,7vw,64px);font-weight:800;color:var(--green);line-height:1.05;}
+.slogan-sub{font-size:14px;color:rgba(255,255,255,.4);margin-top:16px;max-width:500px;margin-left:auto;margin-right:auto;}
+
+/* ── CTA GRAD ── */
+.cta-h{font-size:clamp(22px,4vw,34px);font-weight:800;color:var(--blue-dark);margin-bottom:10px;}
+.cta-p{font-size:15px;color:rgba(0,20,38,.65);margin-bottom:28px;max-width:480px;margin-left:auto;margin-right:auto;}
+.btn-w{background:var(--white);color:var(--blue);font-weight:700;padding:13px 32px;border-radius:10px;border:none;font-size:15px;cursor:pointer;transition:.18s;display:inline-block;}
+.btn-w:hover{background:var(--off);transform:translateY(-1px);}
+.cta-tel{display:block;margin-top:13px;font-size:14px;font-weight:600;color:rgba(0,20,38,.55);}
+
+/* ── BUTTONS INLINE ── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 24px;border-radius:10px;font-family:var(--font);font-size:14px;font-weight:700;border:none;cursor:pointer;transition:.18s;}
+.btn-b{background:var(--blue);color:var(--white);}
+.btn-b:hover{background:var(--blue-mid);}
+.btn-g{background:var(--green);color:var(--blue-dark);}
+.btn-g:hover{background:#1de87c;}
+.btn-o{background:transparent;border:2px solid var(--border);color:var(--blue);}
+.btn-o:hover{border-color:var(--blue);}
+
+/* ── FORMULAIRES ── */
+.fcard{background:var(--off);border-radius:var(--rl);padding:36px;}
+.fg{margin-bottom:14px;}
+.fg label{display:block;font-size:11.5px;font-weight:700;color:var(--blue);margin-bottom:4px;}
+.fg label span{color:var(--violet);}
+.fg input,.fg select,.fg textarea{
+  width:100%;border:1.5px solid var(--border);background:var(--white);
+  padding:11px 14px;font-size:14px;font-family:var(--font);
+  color:var(--blue);border-radius:8px;outline:none;transition:.18s;
+}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--violet);}
+.fg select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7'%3E%3Cpath d='M1 1l4.5 4.5L10 1' stroke='%2364748b' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 13px center;padding-right:36px;}
+.fg textarea{resize:vertical;min-height:90px;}
+.fg-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.fg-check{display:flex;align-items:flex-start;gap:10px;margin-bottom:18px;}
+.fg-check input{width:auto;margin-top:3px;flex-shrink:0;}
+.fg-check label{font-size:12.5px;color:var(--gray);line-height:1.5;}
+
+/* ── ESPACE CLIENT ── */
+.login-card{max-width:460px;margin:0 auto;background:var(--off);border-radius:var(--rl);padding:36px;}
+
+/* ── CONTACT ── */
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:52px;}
+.ci{display:flex;gap:14px;align-items:flex-start;margin-bottom:18px;}
+.ci-ico{width:38px;height:38px;border-radius:10px;background:var(--off);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
+.ci-t{font-size:12.5px;font-weight:700;color:var(--blue);margin-bottom:2px;}
+.ci-v{font-size:14px;color:var(--gray);}
+
+/* ── ABOUT ── */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;}
+.about-num{font-size:clamp(60px,10vw,100px);font-weight:800;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;}
+.about-cap{font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--gray);margin-bottom:14px;}
+.am-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:32px;}
+.am-card{background:var(--off);border-radius:var(--r);padding:16px 18px;}
+.am-l{font-size:26px;font-weight:800;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:4px;}
+.am-t{font-size:13px;color:var(--gray);line-height:1.5;}
+
+/* ── AVANTAGES ── */
+.av-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+.av{background:var(--white);border:1px solid var(--border);border-radius:var(--rl);padding:26px;transition:.2s;}
+.av:hover{box-shadow:0 4px 24px rgba(0,56,83,.08);}
+.av-ico{font-size:30px;margin-bottom:12px;}
+.av h3{font-size:15px;font-weight:700;color:var(--blue);margin-bottom:7px;}
+.av p{font-size:13px;color:var(--gray);line-height:1.6;}
+
+/* ── PROFILS ── */
+.profils{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+.profil{text-align:center;padding:28px 16px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:var(--rl);}
+.profil-ico{font-size:34px;margin-bottom:10px;}
+.profil h3{font-size:15px;font-weight:700;color:var(--white);margin-bottom:7px;}
+.profil p{font-size:12.5px;color:rgba(255,255,255,.5);line-height:1.6;}
+
+/* ── FOOTER ── */
+footer{background:var(--blue-dark);padding:56px 60px 24px;}
+.ft{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;margin-bottom:44px;padding-bottom:44px;border-bottom:1px solid rgba(255,255,255,.06);}
+.ft-brand p{font-size:12.5px;color:rgba(255,255,255,.3);line-height:1.75;max-width:250px;margin-top:13px;}
+.ft-col h4{font-size:9.5px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--green);margin-bottom:14px;}
+.ft-col ul{list-style:none;}
+.ft-col li{margin-bottom:8px;}
+.ft-col a{font-size:12.5px;color:rgba(255,255,255,.3);cursor:pointer;transition:color .18s;}
+.ft-col a:hover{color:var(--white);}
+.ft-bot{display:flex;justify-content:space-between;font-size:11px;color:rgba(255,255,255,.2);}
+.ft-bot a{color:rgba(255,255,255,.2);margin-left:16px;cursor:pointer;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1100px){
+  .nav,.s,.s-blue,.s-gray,.s-grad,.slogan-band,.cta-grad,.ph,footer{padding-left:32px;padding-right:32px;}
+  .pg,.av-grid{grid-template-columns:repeat(2,1fr);}
+  .profils,.packs,.process{grid-template-columns:repeat(2,1fr);}
+  .pq,.about-grid,.contact-grid,.choix-grid{grid-template-columns:1fr;}
+  .ft{grid-template-columns:1fr 1fr;gap:32px;}
+  .stats{grid-template-columns:repeat(2,1fr);}
+}
+@media(max-width:640px){
+  .nav{padding:0 18px;}
+  .nav-links{display:none;}
+  .s,.s-blue,.s-gray,.s-grad,.slogan-band,.ph,footer{padding-left:18px;padding-right:18px;}
+  .s,.s-blue,.s-gray,.s-grad{padding-top:52px;padding-bottom:52px;}
+  .pg{grid-template-columns:1fr;}
+  .hero-btns{flex-direction:column;}
+  .hbtn,.hbtn-r{border-left:none;border-top:1px solid rgba(255,255,255,.15);}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ NAVBAR ══ -->
+<nav class="nav">
+  <div style="display:flex;align-items:center;gap:28px;">
+    <div class="nav-logo" onclick="go('accueil')">
+      <div class="nav-pill"><div class="nav-orb"></div><span class="nav-name">16am</span></div>
+      <div class="nav-base">Diagnostics <span class="nav-dot"></span> État des lieux</div>
+    </div>
+    <ul class="nav-links">
+      <li><a href="#" onclick="go('prestations')">Prestations</a></li>
+      <li><a href="#" onclick="go('entreprise')">Notre entreprise</a></li>
+      <li><a href="#" onclick="go('contact')">Contact</a></li>
+    </ul>
+  </div>
+  <div class="nav-r">
+    <button class="btn-ghost" onclick="go('client')">
+      <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><rect x="1" y="5.5" width="11" height="7" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M4 5.5V4a2.5 2.5 0 0 1 5 0v1.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+      Mon espace
+    </button>
+    <button class="btn-cta" onclick="go('devis')">Devis gratuit</button>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════
+     PAGE : ACCUEIL
+══════════════════════════════════════════ -->
+<div id="page-accueil" class="page active">
+
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-ov"></div>
+    <div class="hero-body">
+      <div class="hero-logo">
+        <div class="hero-pill">
+          <div class="hero-orb"></div>
+          <div>
+            <div class="hero-nm">16am</div>
+          </div>
+        </div>
+        <div class="hero-base">Diagnostics <span class="hero-base-dot"></span> État des lieux</div>
+      </div>
+      <div class="hero-slogan">Et tout devient<br>plus simple !</div>
+      <div class="hero-zone">Rhône-Alpes Auvergne · Bourgogne</div>
+    </div>
+    <div class="hero-btns">
+      <button class="hbtn"  onclick="go('choix')">Diagnostics</button>
+      <button class="hbtn-r" onclick="go('choix')">États des lieux</button>
+    </div>
+  </section>
+
+  <!-- ── SECTION OFFRES : DIAGNOSTICS + ÉTATS DES LIEUX ── -->
+  <section style="display:grid;grid-template-columns:1fr 1fr;gap:0;">
+
+    <!-- DIAGNOSTICS -->
+    <div style="background:var(--blue);padding:60px 52px;">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
+        <div style="width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0;"></div>
+        <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--green);">Diagnostics immobiliers</span>
+      </div>
+      <h2 style="font-size:26px;font-weight:800;color:var(--white);line-height:1.2;margin-bottom:14px;">Tous vos diagnostics réglementaires</h2>
+      <p style="font-size:14px;color:rgba(255,255,255,.6);line-height:1.75;margin-bottom:28px;">Certifiés et accrédités, nos 16 diagnostiqueurs salariés réalisent l'ensemble des diagnostics obligatoires pour la vente, la location et les travaux en Rhône-Alpes Auvergne et Bourgogne.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:32px;">
+        <div style="display:flex;align-items:center;gap:8px;"><div style="width:5px;height:5px;border-radius:50%;background:var(--green);flex-shrink:0;"></div><span style="font-size:13px;color:rgba(255,255,255,.75);">DPE</span></div>
+        <div style="display:flex;align-items:center;gap:8px;"><div style="width:5px;height:5px;border-radius:50%;background:var(--green);flex-shrink:0;"></div><span style="font-size:13px;color:rgba(255,255,255,.75);">Amiante</span></div>
+        <div style="display:flex;align-items:center;gap:8px;"><div style="width:5px;height:5px;border-radius:50%;background:var(--green);flex-shrink:0;"></div><span style="font-size:13px;color:rgba(255,255,255,.75);">Plomb (CREP)</span></div>
+        <div style="display:flex;align-items:center;gap:8px;"><div style="width:5px;height:5px;border-radius:50%;background:var(--green);flex-shrink:0;"></div><span style="font-size:13px;color:rgba(255,255,255,.75);">Électricité</span></div>
+        <div style="display:flex;align-items:center;gap:8px;"><div style="width:5px;height:5px;border-radius:50%;background:var(--green);flex-shrink:0;"></div><span style="font-size:13px;color:rgba(255,255,255,.75);">Gaz</span></div>
+        <div style="display:flex;align-items:center;gap:8px;"><div style="width:5px;height:5px;border-radius:50%;background:var(--green);flex-shrink:0;"></div><span style="font-size:13px;color:rgba(255,255,255,.75);">ERP</span></div>
+        <div style="display:flex;align-items:center;gap:8px;"><div style="width:5px;height:5px;border-radius:50%;background:var(--green);flex-shrink:0;"></div><span style="font-size:13px;color:rgba(255,255,255,.75);">Surface</span></div>
+        <div style="display:flex;align-items:center;gap:8px;"><div style="width:5px;height:5px;border-radius:50%;background:var(--green);flex-shrink:0;"></div><span style="font-size:13px;color:rgba(255,255,255,.75);">PPPT</span></div>
+        <div style="display:flex;align-items:center;gap:8px;"><div style="width:5px;height:5px;border-radius:50%;background:var(--green);flex-shrink:0;"></div><span style="font-size:13px;color:rgba(255,255,255,.75);">DPE Collectif</span></div>
+        <div style="display:flex;align-items:center;gap:8px;"><div style="width:5px;height:5px;border-radius:50%;background:var(--green);flex-shrink:0;"></div><span style="font-size:13px;color:rgba(255,255,255,.75);">RAAT</span></div>
+        <div style="display:flex;align-items:center;gap:8px;"><div style="width:5px;height:5px;border-radius:50%;background:var(--green);flex-shrink:0;"></div><span style="font-size:13px;color:rgba(255,255,255,.75);">Projection DPE</span></div>
+        <div style="display:flex;align-items:center;gap:8px;"><div style="width:5px;height:5px;border-radius:50%;background:var(--green);flex-shrink:0;"></div><span style="font-size:13px;color:rgba(255,255,255,.75);">Détecteurs fumée</span></div>
+      </div>
+      <button onclick="go('choix')" style="background:var(--green);color:var(--blue-dark);border:none;padding:13px 26px;border-radius:9px;font-family:var(--font);font-size:14px;font-weight:700;cursor:pointer;transition:.2s;" onmouseover="this.style.background='#1de87c'" onmouseout="this.style.background='var(--green)'">Demander un devis →</button>
+    </div>
+
+    <!-- ÉTATS DES LIEUX -->
+    <div style="background:var(--off);padding:60px 52px;">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
+        <div style="width:6px;height:6px;border-radius:50%;background:var(--violet);flex-shrink:0;"></div>
+        <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--violet);">États des lieux</span>
+      </div>
+      <h2 style="font-size:26px;font-weight:800;color:var(--blue);line-height:1.2;margin-bottom:14px;">Expert indépendant & impartial</h2>
+      <p style="font-size:14px;color:var(--gray);line-height:1.75;margin-bottom:28px;">Nos experts réalisent vos états des lieux d'entrée et de sortie pour les logements résidentiels et les locaux tertiaires. Un constat précis, détaillé et juridiquement opposable.</p>
+      <div style="display:flex;flex-direction:column;gap:16px;margin-bottom:32px;">
+        <div style="background:var(--white);border-radius:10px;padding:16px 20px;display:flex;align-items:flex-start;gap:14px;">
+          <div style="width:36px;height:36px;border-radius:8px;background:var(--blue);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="8" height="8" rx="1.5" stroke="#34ff9a" stroke-width="1.8"/><rect x="13" y="3" width="8" height="8" rx="1.5" stroke="#7b4cfd" stroke-width="1.8"/><rect x="3" y="13" width="8" height="8" rx="1.5" stroke="#7b4cfd" stroke-width="1.8"/><rect x="13" y="13" width="8" height="8" rx="1.5" stroke="#34ff9a" stroke-width="1.8"/></svg>
+          </div>
+          <div>
+            <div style="font-size:14px;font-weight:700;color:var(--blue);margin-bottom:3px;">Entrée & Sortie</div>
+            <div style="font-size:13px;color:var(--gray);line-height:1.5;">État des lieux contradictoire pour toute prise ou restitution de bien.</div>
+          </div>
+        </div>
+        <div style="background:var(--white);border-radius:10px;padding:16px 20px;display:flex;align-items:flex-start;gap:14px;">
+          <div style="width:36px;height:36px;border-radius:8px;background:var(--blue);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" stroke="#34ff9a" stroke-width="1.8" fill="none"/><polyline points="9 22 9 12 15 12 15 22" stroke="#7b4cfd" stroke-width="1.8" stroke-linecap="round"/></svg>
+          </div>
+          <div>
+            <div style="font-size:14px;font-weight:700;color:var(--blue);margin-bottom:3px;">Résidentiel & Tertiaire</div>
+            <div style="font-size:13px;color:var(--gray);line-height:1.5;">Appartements, maisons, bureaux, locaux commerciaux et industriels.</div>
+          </div>
+        </div>
+        <div style="background:var(--white);border-radius:10px;padding:16px 20px;display:flex;align-items:flex-start;gap:14px;">
+          <div style="width:36px;height:36px;border-radius:8px;background:var(--blue);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#34ff9a" stroke-width="1.8"/><polyline points="12 7 12 12 15 15" stroke="#7b4cfd" stroke-width="1.8" stroke-linecap="round"/></svg>
+          </div>
+          <div>
+            <div style="font-size:14px;font-weight:700;color:var(--blue);margin-bottom:3px;">Intervention rapide</div>
+            <div style="font-size:13px;color:var(--gray);line-height:1.5;">Planification rapide du lundi au vendredi, partout en Rhône-Alpes Auvergne et Bourgogne.</div>
+          </div>
+        </div>
+      </div>
+      <button onclick="go('edl')" style="background:var(--blue);color:var(--white);border:none;padding:13px 26px;border-radius:9px;font-family:var(--font);font-size:14px;font-weight:700;cursor:pointer;transition:.2s;" onmouseover="this.style.background='var(--blue-mid)'" onmouseout="this.style.background='var(--blue)'">Demander un état des lieux →</button>
+    </div>
+
+  </section>
+
+  <div class="stats">
+    <div class="stat"><span class="sv">16</span><span class="sl">Collaborateurs</span></div>
+    <div class="stat"><span class="sv">16</span><span class="sl">Prestations</span></div>
+    <div class="stat"><span class="sv">Rapide</span><span class="sl">Intervention rapide</span></div>
+    <div class="stat"><span class="sv">Rapide</span><span class="sl">Devis · Réponse rapide</span></div>
+  </div>
+
+  <section class="s">
+    <div class="sh">
+      <h2 class="h2">Nos 16 prestations</h2>
+      <p class="lead">Un seul partenaire pour l'ensemble de vos besoins en diagnostics immobiliers et états des lieux.</p>
+    </div>
+    <div class="pg" id="grid-home"></div>
+    <div style="text-align:center;margin-top:36px;">
+      <button class="btn btn-b" onclick="go('prestations')">Voir toutes nos prestations</button>
+    </div>
+  </section>
+
+  <div class="slogan-band">
+    <div class="slogan-big">Et tout devient<br>plus simple !</div>
+    <p class="slogan-sub">Chez 16AM, nous clarifions ce qui paraît complexe, nous rendons la réglementation accessible.</p>
+  </div>
+
+  <section class="s-blue">
+    <div class="inner">
+      <div class="pq">
+        <div class="pq-l">
+          <h2>Pourquoi choisir 16am ?</h2>
+          <div class="args">
+            <div class="arg"><div class="arg-dot"></div><div><h4>Intervention rapide</h4><p>Intervention rapide et certifiée, du lundi au vendredi.</p></div></div>
+            <div class="arg"><div class="arg-dot"></div><div><h4>16 collaborateurs salariés</h4><p>Aucune sous-traitance. Une qualité constante sur chaque mission.</p></div></div>
+            <div class="arg"><div class="arg-dot"></div><div><h4>Devis gratuit · Réponse rapide</h4><p>Sans engagement ni frais cachés. Transparence totale.</p></div></div>
+            <div class="arg"><div class="arg-dot"></div><div><h4>Analyse & Méthode</h4><p>AM, c'est notre promesse : rendre le diagnostic Accessible et serein.</p></div></div>
+          </div>
+        </div>
+        <div class="chiffres">
+          <div class="ch"><span class="chv">16</span><span class="chl">Collaborateurs</span></div>
+          <div class="ch"><span class="chv">16</span><span class="chl">Prestations</span></div>
+          <div class="ch"><span class="chv">0</span><span class="chl">Sous-traitance</span></div>
+          <div class="ch"><span class="chv">Rapide</span><span class="chl">Intervention rapide</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="s-grad">
+    <div class="cta-h">Besoin d'un diagnostic ? Réponse rapide.</div>
+    <div class="cta-p">Devis gratuit, sans engagement. 16 collaborateurs disponibles en Rhône-Alpes Auvergne et Bourgogne.</div>
+    <button class="btn-w" onclick="go('devis')">Demander un devis gratuit</button>
+    <a href="tel:+33478737309" class="cta-tel">04 78 73 73 09</a>
+  </div>
+
+  <footer>
+    <div class="ft">
+      <div class="ft-brand">
+        <div class="nav-pill" style="display:inline-flex;"><div class="nav-orb"></div><span class="nav-name">16am</span></div>
+        <p>SAS 16am by Acticontrole — 200 rue Léon Blum, 69100 Villeurbanne. 16 collaborateurs, 16 prestations, zéro sous-traitance.</p>
+      </div>
+      <div class="ft-col"><h4>Prestations</h4><ul>
+        <li><a onclick="go('edl')">État des lieux</a></li>
+        <li><a onclick="go('prestations')">DPE</a></li>
+        <li><a onclick="go('prestations')">Amiante</a></li>
+        <li><a onclick="go('prestations')">Visite 360°</a></li>
+        <li><a onclick="go('prestations')">Voir tout →</a></li>
+      </ul></div>
+      <div class="ft-col"><h4>Navigation</h4><ul>
+        <li><a onclick="go('entreprise')">Notre entreprise</a></li>
+        <li><a onclick="go('client')">Espace client</a></li>
+        <li><a onclick="go('devis')">Devis gratuit</a></li>
+        <li><a onclick="go('contact')">Contact</a></li>
+      </ul></div>
+      <div class="ft-col"><h4>Contact</h4><ul>
+        <li><a href="tel:+33478737309">04 78 73 73 09</a></li>
+        <li><a href="mailto:contact@16am.immo">contact@16am.immo</a></li>
+        <li><a>200 rue Léon Blum</a></li>
+        <li><a>69100 Villeurbanne</a></li>
+        <li><a>Lun–Ven · 8h–20h</a></li>
+      </ul></div>
+    </div>
+    <div class="ft-bot">
+      <span>© 2026 SAS 16am by Acticontrole — Siret 999 150 345 00018 RCS Lyon</span>
+      <div><a>Mentions légales</a><a>CGV</a><a>Confidentialité</a></div>
+    </div>
+  </footer>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE : CHOIX (client ou devis)
+══════════════════════════════════════════ -->
+<div id="page-choix" class="page">
+  <section class="ph">
+    <span class="ph-ey">Bienvenue chez 16am</span>
+    <h1>Comment pouvons-nous<br>vous aider ?</h1>
+  </section>
+  <section class="s" style="max-width:880px;margin:0 auto;padding-top:56px;padding-bottom:80px;">
+    <div class="choix-grid">
+
+      <!-- DÉJÀ CLIENT → ESPACE CLIENT -->
+      <div class="choix-blue">
+        <div>
+          <div class="choix-label" style="color:var(--green);">Vous êtes client 16am</div>
+          <div class="choix-h" style="color:var(--white);margin-top:8px;">Accédez à vos rapports</div>
+          <div class="choix-p" style="color:rgba(255,255,255,.55);margin-top:8px;">Connectez-vous pour consulter et télécharger vos diagnostics.</div>
+        </div>
+        <p style="font-size:13px;color:rgba(255,255,255,.5);line-height:1.6;">Accédez à vos rapports et dossiers en toute sécurité.</p>
+        <button class="btn-full btn-full-g" onclick="window.open('https://app.dwell.immo','_blank')">Accéder à mon espace →</button>
+      </div>
+
+      <!-- PAS CLIENT → DEVIS -->
+      <div class="choix-off">
+        <div>
+          <div class="choix-label" style="color:var(--violet);">Pas encore client</div>
+          <div class="choix-h" style="color:var(--blue);margin-top:8px;">Demandez un devis gratuit</div>
+          <div class="choix-p" style="color:var(--gray);margin-top:8px;">Réponse rapide, sans engagement. Notre équipe vous recontacte rapidement.</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:9px;">
+          <div class="avantage"><div class="avantage-dot"></div>Devis 100% gratuit</div>
+          <div class="avantage"><div class="avantage-dot"></div>Réponse rapide</div>
+          <div class="avantage"><div class="avantage-dot"></div>Intervention rapide</div>
+          <div class="avantage"><div class="avantage-dot"></div>Intervention sous 24h</div>
+        </div>
+        <button class="btn-full btn-full-b" onclick="go('devis')">Demander un devis →</button>
+        <p style="text-align:center;font-size:12.5px;color:var(--gray);">ou <span onclick="go('prestations')" style="color:var(--violet);font-weight:600;cursor:pointer;">voir nos prestations</span></p>
+      </div>
+
+    </div>
+  </section>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE : PRESTATIONS
+══════════════════════════════════════════ -->
+<div id="page-prestations" class="page">
+  <section class="ph">
+    <span class="ph-ey">Nos 16 prestations</span>
+    <h1>Un seul partenaire, toutes les expertises</h1>
+    <p>16 prestations certifiées, intervention rapide et certifiée.</p>
+  </section>
+  <section class="s">
+    <div class="tabs" id="tabs-p">
+      <button class="tab active" onclick="filtrer('Tous',this)">Toutes</button>
+      <button class="tab" onclick="filtrer('Diagnostics',this)">Diagnostics</button>
+      <button class="tab" onclick="filtrer('État des lieux',this)">État des lieux</button>
+      <button class="tab" onclick="filtrer('Énergie',this)">Énergie</button>
+      <button class="tab" onclick="filtrer('Conseil',this)">Conseil</button>
+    </div>
+    <div class="pg" id="grid-presta"></div>
+  </section>
+
+
+
+  <section class="s">
+    <div class="sh"><h2 class="h2">Comment ça se passe ?</h2><p class="lead">4 étapes, zéro friction. Simple et rapide.</p></div>
+    <div class="process">
+      <div class="pstep"><div class="pstep-n">1</div><h3>Devis gratuit</h3><p>Réponse rapide, sans engagement.</p></div>
+      <div class="pstep"><div class="pstep-n">2</div><h3>Prise de RDV</h3><p>Intervention planifiée rapidement, 5j/7.</p></div>
+      <div class="pstep"><div class="pstep-n">3</div><h3>Intervention</h3><p>Diagnostiqueurs certifiés, salariés 16am.</p></div>
+      <div class="pstep"><div class="pstep-n">4</div><h3>Intervention rapide</h3><p>Intervention rapide certifiée.</p></div>
+    </div>
+  </section>
+
+  <div class="s-grad">
+    <div class="cta-h">Prêt à démarrer ?</div>
+    <div class="cta-p">Devis gratuit, intervention rapide. C'est ça, 16am.</div>
+    <button class="btn-w" onclick="go('devis')">Demander un devis gratuit</button>
+    <a href="tel:+33478737309" class="cta-tel">04 78 73 73 09</a>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE : DEVIS
+══════════════════════════════════════════ -->
+<div id="page-devis" class="page">
+  <section class="ph">
+    <span class="ph-ey">Devis gratuit</span>
+    <h1>Votre devis en quelques minutes</h1>
+    <p>Réponse rapide, sans engagement, 100% gratuit.</p>
+  </section>
+  <section class="s" style="max-width:720px;margin:0 auto;">
+    <div class="fcard">
+      <div class="fg-row" style="margin-bottom:14px;">
+        <div class="fg"><label>Type de bien <span>*</span></label><select><option>Appartement</option><option>Maison</option><option>Local commercial</option></select></div>
+        <div class="fg"><label>Surface <span>*</span></label><select><option>Moins de 30 m²</option><option>30 à 50 m²</option><option>50 à 80 m²</option><option>80 à 120 m²</option><option>Plus de 120 m²</option></select></div>
+      </div>
+      <div class="fg"><label>Motif <span>*</span></label><select><option>Mise en vente</option><option>Mise en location</option><option>Avant travaux</option><option>Copropriété / PPPT</option></select></div>
+      <div class="fg-row" style="margin:14px 0 0;">
+        <div class="fg"><label>Prénom <span>*</span></label><input type="text" placeholder="Marie"></div>
+        <div class="fg"><label>Nom <span>*</span></label><input type="text" placeholder="Dupont"></div>
+        <div class="fg"><label>Email <span>*</span></label><input type="email" placeholder="marie@cabinet.fr"></div>
+        <div class="fg"><label>Téléphone <span>*</span></label><input type="tel" placeholder="06 00 00 00 00"></div>
+      </div>
+      <div class="fg-check" style="margin-top:14px;">
+        <input type="checkbox" id="rgpd-d">
+        <label for="rgpd-d">J'accepte que mes données soient utilisées pour traiter ma demande conformément à la <span style="color:var(--violet);">politique de confidentialité</span> de 16am.</label>
+      </div>
+      <button class="btn btn-g" style="width:100%;justify-content:center;padding:14px;font-size:15px;" onclick="confirmDevis()">Envoyer ma demande →</button>
+    </div>
+  </section>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE : ÉTAT DES LIEUX
+══════════════════════════════════════════ -->
+<div id="page-edl" class="page">
+  <section class="ph">
+    <span class="ph-ey">État des lieux</span>
+    <h1>État des lieux par un expert indépendant</h1>
+    <p>Entrée, sortie ou contradictoire — résidentiel et tertiaire. Intervention rapide.</p>
+  </section>
+  <section class="s" style="max-width:700px;margin:0 auto;">
+    <div class="fcard">
+      <div class="fg-row" style="margin-bottom:14px;">
+        <div class="fg"><label>Type de bien <span>*</span></label><select><option>Appartement</option><option>Maison</option><option>Local commercial</option></select></div>
+        <div class="fg"><label>Type d'état des lieux <span>*</span></label><select><option>Entrée</option><option>Sortie</option><option>Les deux</option></select></div>
+      </div>
+      <div class="fg"><label>Adresse du bien <span>*</span></label><input type="text" placeholder="12 rue des Acacias, Lyon 69006"></div>
+      <div class="fg-row" style="margin:14px 0 0;">
+        <div class="fg"><label>Prénom <span>*</span></label><input type="text" placeholder="Marie"></div>
+        <div class="fg"><label>Nom <span>*</span></label><input type="text" placeholder="Dupont"></div>
+        <div class="fg"><label>Email <span>*</span></label><input type="email" placeholder="marie@cabinet.fr"></div>
+        <div class="fg"><label>Téléphone <span>*</span></label><input type="tel" placeholder="06 00 00 00 00"></div>
+      </div>
+      <div class="fg" style="margin-top:14px;"><label>Date souhaitée</label><input type="date"></div>
+      <div class="fg-check" style="margin-top:14px;">
+        <input type="checkbox" id="rgpd-e">
+        <label for="rgpd-e">J'accepte la <span style="color:var(--violet);">politique de confidentialité</span> de 16am.</label>
+      </div>
+      <button class="btn btn-g" style="width:100%;justify-content:center;padding:14px;font-size:15px;" onclick="confirmEDL()">Envoyer ma demande →</button>
+    </div>
+  </section>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE : ESPACE CLIENT
+══════════════════════════════════════════ -->
+<div id="page-client" class="page">
+  <section class="ph">
+    <span class="ph-ey">Espace client</span>
+    <h1>Mon espace client</h1>
+    <p>Consultez et téléchargez vos diagnostics en toute sécurité.</p>
+  </section>
+  <section class="s">
+    <div class="login-card" style="text-align:center;">
+      <div style="width:58px;height:58px;border-radius:16px;background:var(--blue);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none"><path d="M3 12L12 4L21 12V20C21 20.6 20.6 21 20 21H15V16H9V21H4C3.4 21 3 20.6 3 20V12Z" stroke="#34ff9a" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <h2 style="font-size:20px;font-weight:800;color:var(--blue);margin-bottom:10px;">Mon espace client</h2>
+      <p style="font-size:13.5px;color:var(--gray);margin-bottom:28px;line-height:1.65;">Accédez à vos rapports et dossiers en toute sécurité.</p>
+      <button class="btn btn-g" style="width:100%;justify-content:center;padding:14px;font-size:15px;margin-bottom:20px;" onclick="window.open('https://app.dwell.immo','_blank')">
+        Accéder à mon espace →
+      </button>
+      <div style="border-top:1px solid var(--border);padding-top:16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+        <span style="font-size:12.5px;color:var(--gray);">Pas encore client ?</span>
+        <span onclick="go('devis')" style="font-size:13px;color:var(--violet);font-weight:600;cursor:pointer;">Demander un devis gratuit →</span>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE : NOTRE ENTREPRISE
+══════════════════════════════════════════ -->
+<div id="page-entreprise" class="page">
+  <section class="ph">
+    <span class="ph-ey">Notre entreprise</span>
+    <h1>16AM — L'heure où tout devient clair</h1>
+    <p>Né d'une évidence : notre pôle Diagnostic méritait une identité propre.</p>
+  </section>
+  <section class="s">
+    <div class="about-grid">
+      <div>
+        <p class="about-cap">Pourquoi 16AM ?</p>
+        <div class="about-num">16</div>
+        <p style="font-size:15px;color:var(--gray);line-height:1.75;margin-top:14px;">16, c'est notre chiffre de réalité et d'exigence. Celui de nos 16 collaborateurs salariés, de nos 16 prestations, de notre engagement quotidien.</p>
+        <div class="am-grid">
+          <div class="am-card"><div class="am-l">A</div><div class="am-t"><strong>Analyse</strong> — Expertise technique rigoureuse sur chaque intervention</div></div>
+          <div class="am-card"><div class="am-l">M</div><div class="am-t"><strong>Méthode</strong> — Processus clair, intervention rapide, zéro friction</div></div>
+          <div class="am-card"><div class="am-l">A</div><div class="am-t"><strong>Accessible</strong> — La réglementation rendue simple pour tous</div></div>
+          <div class="am-card"><div class="am-l">M</div><div class="am-t"><strong>serein</strong> — Un partenaire vraiment là pour vous</div></div>
+        </div>
+      </div>
+      <div style="background:var(--blue);border-radius:var(--rl);padding:36px;">
+        <p style="font-size:14.5px;line-height:1.85;color:rgba(255,255,255,.7);">Chez 16AM, nous pensons que le diagnostic immobilier ne devrait jamais être un obstacle.<br><br>Que de passage obligé, il peut devenir un sésame : celui qui ouvre tout, celui grâce auquel chaque opération retrouve sa fluidité.<br><br>Chaque jour, nous débloquons, nous clarifions, nous rendons accessible.</p>
+        <div style="margin-top:28px;padding-top:22px;border-top:1px solid rgba(255,255,255,.1);">
+          <div style="font-size:clamp(26px,4vw,36px);font-weight:800;color:var(--green);line-height:1.1;">Et tout devient<br>plus simple !</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="s-gray">
+    <div class="inner">
+      <div class="sh"><h2 class="h2">Nous intervenons exclusivement pour les professionnels</h2><p class="lead">Syndics, administrateurs de biens, agences, notaires — un seul interlocuteur.</p></div>
+      <div class="av-grid">
+        <div class="av"><div class="av-ico">🔐</div><h3>Plateforme sécurisée</h3><p>Accès extranet sécurisé pour consulter et télécharger vos rapports.</p></div>
+        <div class="av"><div class="av-ico">📦</div><h3>Tarifs volume</h3><p>Conditions avantageuses pour les partenaires récurrents et gros volumes.</p></div>
+        <div class="av"><div class="av-ico">⚡</div><h3>Intervention rapide</h3><p>Intervention rapide, certifiée.</p></div>
+        <div class="av"><div class="av-ico">🏅</div><h3>Équipe 100% salariée</h3><p>16 diagnostiqueurs salariés. Aucune sous-traitance, qualité constante.</p></div>
+        <div class="av"><div class="av-ico">📅</div><h3>RDV rapide</h3><p>Intervention planifiée rapidement, du lundi au vendredi.</p></div>
+        <div class="av"><div class="av-ico">🎯</div><h3>Clé en main</h3><p>Un seul interlocuteur, de la commande à la livraison. Zéro friction.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="s-blue">
+    <div class="inner">
+      <div class="sh"><h2 class="h2" style="color:var(--white);">Nous travaillons avec vous</h2><p class="lead" style="color:rgba(255,255,255,.55);">4 profils professionnels, une même exigence.</p></div>
+      <div class="profils">
+        <div class="profil"><div class="profil-ico">🏢</div><h3>Syndics</h3><p>Copropriétés, PPPT, parties communes. Dossiers accessibles par immeuble.</p></div>
+        <div class="profil"><div class="profil-ico">🗂️</div><h3>Admins de biens</h3><p>Suivi de parc locatif et vente, devis groupés, dossiers centralisés.</p></div>
+        <div class="profil"><div class="profil-ico">🤝</div><h3>Agences immo</h3><p>DDT pour vos mandats. Réactivité maximale pour vos signatures.</p></div>
+        <div class="profil"><div class="profil-ico">⚖️</div><h3>Notaires</h3><p>Dossiers conformes aux actes authentiques, transmis rapidement.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="s-grad">
+    <div class="cta-h">Un projet ? Parlons-en.</div>
+    <div class="cta-p">Devis gratuit, intervention rapide. C'est l'heure où tout devient clair.</div>
+    <button class="btn-w" onclick="go('contact')">Nous contacter</button>
+    <a href="tel:+33478737309" class="cta-tel">04 78 73 73 09</a>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE : CONTACT
+══════════════════════════════════════════ -->
+<div id="page-contact" class="page">
+  <section class="ph">
+    <span class="ph-ey">Contact</span>
+    <h1>Parlons de votre projet</h1>
+    <p>Notre équipe vous répond rapidement en jours ouvrés.</p>
+  </section>
+  <section class="s">
+    <div class="contact-grid">
+      <div>
+        <h3 style="font-size:19px;font-weight:700;color:var(--blue);margin-bottom:20px;">Nos coordonnées</h3>
+        <div class="ci"><div class="ci-ico">📞</div><div><div class="ci-t">Téléphone</div><div class="ci-v"><a href="tel:+33478737309">04 78 73 73 09</a></div></div></div>
+        <div class="ci"><div class="ci-ico">✉️</div><div><div class="ci-t">Email</div><div class="ci-v"><a href="mailto:contact@16am.immo">contact@16am.immo</a></div></div></div>
+        <div class="ci"><div class="ci-ico">📍</div><div><div class="ci-t">Adresse</div><div class="ci-v">200 rue Léon Blum<br>69100 Villeurbanne</div></div></div>
+        <div class="ci"><div class="ci-ico">🕐</div><div><div class="ci-t">Horaires</div><div class="ci-v">Lundi – Vendredi<br>8h – 20h</div></div></div>
+        <div class="ci"><div class="ci-ico">🌍</div><div><div class="ci-t">Zone d'intervention</div><div class="ci-v">Rhône-Alpes Auvergne<br>Bourgogne</div></div></div>
+      </div>
+      <div class="fcard">
+        <h3 style="font-size:17px;font-weight:700;color:var(--blue);margin-bottom:20px;">Envoyer un message</h3>
+        <div class="fg-row" style="margin-bottom:14px;">
+          <div class="fg"><label>Nom <span>*</span></label><input type="text" placeholder="Dupont"></div>
+          <div class="fg"><label>Email <span>*</span></label><input type="email" placeholder="contact@cabinet.fr"></div>
+        </div>
+        <div class="fg"><label>Sujet</label><input type="text" placeholder="Demande de devis groupé"></div>
+        <div class="fg"><label>Message <span>*</span></label><textarea placeholder="Votre message..."></textarea></div>
+        <div class="fg-check">
+          <input type="checkbox" id="rgpd-c">
+          <label for="rgpd-c">J'accepte la <span style="color:var(--violet);">politique de confidentialité</span> de 16am.</label>
+        </div>
+        <button class="btn btn-g" style="width:100%;justify-content:center;padding:13px;" onclick="alert('✅ Message envoyé !\nNotre équipe vous répond rapidement.')">Envoyer →</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ══ JAVASCRIPT ══ -->
+<script>
+/* ── NAVIGATION ── */
+function go(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'))
+  const p = document.getElementById('page-' + id)
+  if (p) { p.classList.add('active'); window.scrollTo(0,0); }
+  if (id === 'prestations') renderGrid('grid-presta', PRESTATIONS)
+  if (id === 'accueil')     renderGrid('grid-home',   PRESTATIONS)
+}
+
+/* ── CONNEXION ESPACE CLIENT ── */
+function connexionDwel() { window.open('https://app.dwell.immo','_blank'); }
+function connexionDwelClient() { window.open('https://app.dwell.immo','_blank'); }
+
+/* ── CONFIRMATIONS FORMULAIRES ── */
+function confirmDevis() {
+  const ref = '16AM-' + new Date().getFullYear() + '-' + Math.floor(1000+Math.random()*9000)
+  alert('✅ Demande reçue !\nRéf : ' + ref + '\nNotre équipe vous recontacte rapidement.\n📞 04 78 73 73 09')
+}
+function confirmEDL() {
+  const ref = '16AM-EDL-' + new Date().getFullYear() + '-' + Math.floor(1000+Math.random()*9000)
+  alert('✅ Demande reçue !\nRéf : ' + ref + '\nNous vous recontactons rapidement.')
+}
+
+/* ── SVG PICTOGRAMMES OFFICIELS BRANDBOOK ── */
+/* ── SVG PICTOGRAMMES BRANDBOOK 16AM ── */
+/* viewBox 56×56, cercle fond bleu foncé, icônes en dégradé vert→violet */
+function ic(inner) {
+  const uid = 'g' + Math.random().toString(36).slice(2,8)
+  return `<svg width="64" height="64" viewBox="0 0 56 56" style="flex-shrink:0;display:block"><defs><linearGradient id="${uid}" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#34ff9a"/><stop offset="100%" stop-color="#7b4cfd"/></linearGradient></defs><circle cx="28" cy="28" r="27" fill="#07192a" stroke="url(#${uid})" stroke-width="1.6"/>${inner.replace(/\bGR\b/g,'url(#'+uid+')')}</svg>`
+}
+
+const SVG = {
+  /* 1. État des lieux — presse-papiers + coche */
+  edl: function(){return ic('<rect x="16" y="10" width="16" height="22" rx="2.5" fill="none" stroke="GR" stroke-width="2"/><line x1="19" y1="16" x2="29" y2="16" stroke="GR" stroke-width="1.8" stroke-linecap="round"/><line x1="19" y1="20" x2="29" y2="20" stroke="GR" stroke-width="1.8" stroke-linecap="round"/><line x1="19" y1="24" x2="24" y2="24" stroke="GR" stroke-width="1.8" stroke-linecap="round"/><circle cx="34" cy="38" r="8" fill="none" stroke="GR" stroke-width="2"/><polyline points="30,38 33,41 39,35" stroke="#34ff9a" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>')},
+  /* 2. Visite 360° — caméra + 360 */
+  v360: function(){return ic('<rect x="12" y="18" width="26" height="18" rx="3" fill="none" stroke="GR" stroke-width="2"/><circle cx="25" cy="27" r="5" fill="none" stroke="GR" stroke-width="2"/><circle cx="25" cy="27" r="2" fill="GR"/><path d="M38 22 l6-4v18l-6-4" fill="none" stroke="GR" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>')},
+  /* 3. Détecteurs de fumée — capteur */
+  fumee: function(){return ic('<circle cx="28" cy="24" r="9" fill="none" stroke="GR" stroke-width="2"/><circle cx="28" cy="24" r="4" fill="none" stroke="GR" stroke-width="1.8"/><circle cx="28" cy="24" r="1.5" fill="#34ff9a"/><path d="M22 14 Q18 8 22 4" stroke="#34ff9a" stroke-width="1.8" fill="none" stroke-linecap="round"/><path d="M28 13 Q28 7 28 4" stroke="#7b4cfd" stroke-width="1.8" fill="none" stroke-linecap="round"/><path d="M34 14 Q38 8 34 4" stroke="#34ff9a" stroke-width="1.8" fill="none" stroke-linecap="round"/><rect x="17" y="35" width="22" height="8" rx="4" fill="none" stroke="GR" stroke-width="2"/>')},
+  /* 4. DPE — barres énergie */
+  dpe: function(){return ic('<rect x="12" y="13" width="22" height="5" rx="2.5" fill="#34ff9a"/><rect x="12" y="21" width="18" height="5" rx="2.5" fill="GR"/><rect x="12" y="29" width="14" height="5" rx="2.5" fill="#7b4cfd"/><rect x="12" y="37" width="10" height="5" rx="2.5" fill="#7b4cfd"/><line x1="37" y1="11" x2="37" y2="44" stroke="GR" stroke-width="2" stroke-linecap="round"/>')},
+  /* 5. Projection DPE — graphe en hausse */
+  proj: function(){return ic('<rect x="10" y="32" width="7" height="12" rx="2" fill="#34ff9a"/><rect x="20" y="25" width="7" height="19" rx="2" fill="GR"/><rect x="30" y="17" width="7" height="27" rx="2" fill="#7b4cfd"/><polyline points="10,28 23,20 37,11" stroke="#34ff9a" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle cx="37" cy="11" r="3" fill="#34ff9a"/>')},
+  /* 6. Amiante — lettre a */
+  ami: function(){return ic('<text x="28" y="39" text-anchor="middle" font-size="32" font-weight="900" font-family="Georgia,serif" fill="GR">a</text>')},
+  /* 7. Plomb — Pb */
+  plomb: function(){return ic('<text x="28" y="36" text-anchor="middle" font-size="22" font-weight="800" font-family="monospace" fill="GR">Pb</text>')},
+  /* 8. Électricité — éclair */
+  elec: function(){return ic('<path d="M33 10 L18 29 h10 L23 46 L40 24 h-11 Z" fill="GR"/>')},
+  /* 9. Gaz — flamme */
+  gaz: function(){return ic('<path d="M28 9 C28 9 16 20 16 29 C16 37 21.5 44 28 44 C34.5 44 40 37 40 29 C40 23 35 19 32 14 C32 14 30 22 26 22 C22 22 21 17 28 9 Z" fill="GR"/>')},
+  /* 10. ERP — triangle attention */
+  erp: function(){return ic('<path d="M28 11 L44 41 H12 Z" fill="none" stroke="GR" stroke-width="2.5" stroke-linejoin="round"/><line x1="28" y1="21" x2="28" y2="33" stroke="#34ff9a" stroke-width="2.5" stroke-linecap="round"/><circle cx="28" cy="37.5" r="2.2" fill="#7b4cfd"/>')},
+  /* 11. Surface — équerre */
+  surf: function(){return ic('<path d="M12 43 L12 15 L40 15" fill="none" stroke="GR" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><line x1="16" y1="43" x2="16" y2="39" stroke="GR" stroke-width="1.8" stroke-linecap="round"/><line x1="24" y1="43" x2="24" y2="39" stroke="GR" stroke-width="1.8" stroke-linecap="round"/><line x1="32" y1="43" x2="32" y2="39" stroke="GR" stroke-width="1.8" stroke-linecap="round"/><line x1="12" y1="23" x2="16" y2="23" stroke="GR" stroke-width="1.8" stroke-linecap="round"/><line x1="12" y1="31" x2="16" y2="31" stroke="GR" stroke-width="1.8" stroke-linecap="round"/>')},
+  /* 12. PPPT — document + clé */
+  pppt: function(){return ic('<rect x="12" y="9" width="20" height="27" rx="2.5" fill="none" stroke="GR" stroke-width="2"/><line x1="16" y1="15" x2="28" y2="15" stroke="#34ff9a" stroke-width="1.8" stroke-linecap="round"/><line x1="16" y1="20" x2="28" y2="20" stroke="#7b4cfd" stroke-width="1.8" stroke-linecap="round"/><line x1="16" y1="25" x2="22" y2="25" stroke="#7b4cfd" stroke-width="1.8" stroke-linecap="round"/><circle cx="36" cy="40" r="6" fill="none" stroke="GR" stroke-width="2"/><line x1="36" y1="34" x2="36" y2="28" stroke="#34ff9a" stroke-width="2" stroke-linecap="round"/><line x1="33" y1="30" x2="39" y2="30" stroke="#34ff9a" stroke-width="2" stroke-linecap="round"/>')},
+  /* 13. DPE Collectif — 2 colonnes de barres */
+  dpec: function(){return ic('<rect x="9"  y="14" width="10" height="28" rx="2" fill="none" stroke="GR" stroke-width="2"/><line x1="12" y1="19" x2="16" y2="19" stroke="#34ff9a" stroke-width="1.8" stroke-linecap="round"/><line x1="12" y1="24" x2="16" y2="24" stroke="#34ff9a" stroke-width="1.8" stroke-linecap="round"/><line x1="12" y1="29" x2="16" y2="29" stroke="#7b4cfd" stroke-width="1.8" stroke-linecap="round"/><line x1="12" y1="34" x2="16" y2="34" stroke="#7b4cfd" stroke-width="1.8" stroke-linecap="round"/><rect x="22" y="14" width="10" height="28" rx="2" fill="none" stroke="GR" stroke-width="2"/><line x1="25" y1="19" x2="29" y2="19" stroke="#34ff9a" stroke-width="1.8" stroke-linecap="round"/><line x1="25" y1="24" x2="29" y2="24" stroke="#7b4cfd" stroke-width="1.8" stroke-linecap="round"/><line x1="25" y1="29" x2="29" y2="29" stroke="#7b4cfd" stroke-width="1.8" stroke-linecap="round"/><line x1="25" y1="34" x2="29" y2="34" stroke="#7b4cfd" stroke-width="1.8" stroke-linecap="round"/><rect x="35" y="14" width="10" height="28" rx="2" fill="none" stroke="GR" stroke-width="2"/><line x1="38" y1="19" x2="42" y2="19" stroke="#7b4cfd" stroke-width="1.8" stroke-linecap="round"/><line x1="38" y1="24" x2="42" y2="24" stroke="#7b4cfd" stroke-width="1.8" stroke-linecap="round"/>')},
+  /* 14. RAAT — a + loupe */
+  raat: function(){return ic('<text x="22" y="34" text-anchor="middle" font-size="22" font-weight="900" font-family="Georgia,serif" fill="#34ff9a">a</text><circle cx="34" cy="26" r="8" fill="none" stroke="GR" stroke-width="2"/><line x1="39" y1="31" x2="46" y2="38" stroke="#7b4cfd" stroke-width="2.5" stroke-linecap="round"/>')},
+  /* 15. Visite d'immeuble — bâtiment + loupe */
+  visite: function(){return ic('<rect x="10" y="16" width="22" height="28" rx="2" fill="none" stroke="GR" stroke-width="2"/><rect x="14" y="20" width="5" height="5" rx="1" fill="#34ff9a"/><rect x="22" y="20" width="5" height="5" rx="1" fill="#7b4cfd"/><rect x="14" y="29" width="5" height="5" rx="1" fill="#7b4cfd"/><rect x="18" y="37" width="5" height="7" rx="1" fill="GR"/><circle cx="38" cy="26" r="7" fill="none" stroke="GR" stroke-width="2"/><line x1="43" y1="31" x2="48" y2="37" stroke="#34ff9a" stroke-width="2.5" stroke-linecap="round"/>')},
+  /* 16. Conseils — bulle chat + main */
+  conseil: function(){return ic('<rect x="10" y="12" width="28" height="20" rx="4" fill="none" stroke="GR" stroke-width="2"/><circle cx="18" cy="22" r="2" fill="#34ff9a"/><circle cx="24" cy="22" r="2" fill="GR"/><circle cx="30" cy="22" r="2" fill="#7b4cfd"/><path d="M16 32 L12 40 L24 35" fill="none" stroke="GR" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>')},
+}
+
+/* ── DONNÉES PRESTATIONS ── */
+const PRESTATIONS = [
+  {cat:'État des lieux', nom:'États des lieux',      desc:'Entrée, sortie ou contradictoire. Résidentiel et tertiaire.',   fn:function(){return SVG.edl()}},
+  {cat:'Conseil',        nom:'Visite virtuelle 360°',desc:'Visite immersive de vos biens pour valoriser vos mandats.',     fn:function(){return SVG.v360()}},
+  {cat:'Diagnostics',    nom:'Détecteurs de fumée',  desc:'Installation et vérification conformes à la réglementation.',  fn:function(){return SVG.fumee()}},
+  {cat:'Énergie',        nom:'DPE',                  desc:'Diagnostic de Performance Énergétique pour vente et location.',fn:function(){return SVG.dpe()}},
+  {cat:'Énergie',        nom:'Projection DPE',       desc:'Simulation des travaux de rénovation énergétique.',            fn:function(){return SVG.proj()}},
+  {cat:'Diagnostics',    nom:'Amiante',              desc:'Repérage obligatoire, bâtiments antérieurs à juillet 1997.',   fn:function(){return SVG.ami()}},
+  {cat:'Diagnostics',    nom:'Plomb',                desc:"Constat de risque d'exposition au plomb (CREP), avant 1949.", fn:function(){return SVG.plomb()}},
+  {cat:'Diagnostics',    nom:'Électricité',          desc:'Contrôle des installations électriques de plus de 15 ans.',   fn:function(){return SVG.elec()}},
+  {cat:'Diagnostics',    nom:'Gaz',                  desc:'Vérification des installations intérieures gaz +15 ans.',     fn:function(){return SVG.gaz()}},
+  {cat:'Diagnostics',    nom:'ERP',                  desc:'État des Risques et Pollutions — risques naturels et technos.',fn:function(){return SVG.erp()}},
+  {cat:'Diagnostics',    nom:'Surface',              desc:'Mesurage loi Carrez (vente) et loi Boutin (location).',       fn:function(){return SVG.surf()}},
+  {cat:'Diagnostics',    nom:'PPPT',                 desc:'Plan Pluriannuel de Travaux pour copropriétés +15 ans.',      fn:function(){return SVG.pppt()}},
+  {cat:'Énergie',        nom:'DPE Collectif',        desc:"DPE à l'échelle de l'immeuble en copropriété.",              fn:function(){return SVG.dpec()}},
+  {cat:'Diagnostics',    nom:'RAAT',                 desc:'Recherche et accompagnement amiante avant travaux.',          fn:function(){return SVG.raat()}},
+  {cat:'Conseil',        nom:"Visite d'immeuble",    desc:"Expertise complète de l'état général d'un immeuble.",        fn:function(){return SVG.visite()}},
+  {cat:'Conseil',        nom:'Conseils',             desc:'Accompagnement sur vos problématiques réglementaires.',       fn:function(){return SVG.conseil()}},
+]
+
+function makeCard(p) {
+  return '<div class="pc" onclick="go(\'choix\')">' +
+    p.fn() +
+    '<div class="pc-name">' + p.nom + '</div>' +
+    '<div class="pc-desc">' + p.desc + '</div>' +
+    '<span class="pc-lnk">Demander un devis →</span>' +
+    '</div>';
+}
+
+function renderGrid(id, liste) {
+  const el = document.getElementById(id)
+  if (el) el.innerHTML = liste.map(makeCard).join('')
+}
+
+function filtrer(cat, btn) {
+  document.querySelectorAll('#tabs-p .tab').forEach(b => b.classList.remove('active'))
+  btn.classList.add('active')
+  renderGrid('grid-presta', cat === 'Tous' ? PRESTATIONS : PRESTATIONS.filter(p => p.cat === cat))
+}
+
+/* Init */
+renderGrid('grid-home', PRESTATIONS)
+renderGrid('grid-presta', PRESTATIONS)
+</script>
+</body>
+</html>
