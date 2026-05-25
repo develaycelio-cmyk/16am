@@ -18,7 +18,7 @@
   --gray:#64748b;
   --border:#e2e8f0;
   --grad:linear-gradient(135deg,#34ff9a 0%,#7b4cfd 100%);
-  --orb:linear-gradient(135deg,#34e8c8 0%,#7b4cfd 100%);
+  --orb:linear-gradient(135deg,#37fd9b 0%,#48d2b0 30%,#6488d4 65%,#7756eb 100%);
   --font:'Plus Jakarta Sans',sans-serif;
   --r:12px;--rl:20px;
 }
@@ -31,23 +31,23 @@ button{cursor:pointer;font-family:var(--font);}
 /* ── NAVBAR ── */
 .nav{
   position:fixed;top:0;left:0;right:0;z-index:999;
-  height:70px;background:rgba(0,20,38,.97);backdrop-filter:blur(14px);
+  height:88px;background:#001f2e;backdrop-filter:blur(14px);
   display:flex;align-items:center;justify-content:space-between;
-  padding:0 60px;border-bottom:1px solid rgba(255,255,255,.06);
+  padding:0 60px;border-bottom:1px solid rgba(255,255,255,.08);
 }
-.nav-logo{cursor:pointer;display:flex;flex-direction:column;gap:3px;}
+.nav-logo{cursor:pointer;display:flex;flex-direction:column;align-items:flex-start;gap:6px;}
 .nav-pill{
-  background:#001f2e;border:1.5px solid rgba(255,255,255,.15);
-  border-radius:50px;padding:6px 16px 6px 7px;
-  display:inline-flex;align-items:center;gap:8px;
+  background:#00233a;border:2px solid rgba(255,255,255,.15);
+  border-radius:50px;padding:6px 22px 6px 6px;
+  display:inline-flex;align-items:center;gap:12px;
 }
-.nav-orb{width:30px;height:30px;border-radius:50%;background:var(--orb);flex-shrink:0;}
-.nav-name{font-size:20px;font-weight:800;color:var(--white);letter-spacing:-.3px;}
-.nav-base{font-size:10px;font-weight:600;color:rgba(255,255,255,.4);letter-spacing:.5px;display:flex;align-items:center;gap:4px;padding-left:2px;}
-.nav-dot{width:5px;height:5px;border-radius:50%;background:var(--violet);}
+.nav-orb{width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,#37fd9b 0%,#48d2b0 30%,#6488d4 65%,#7756eb 100%);flex-shrink:0;}
+.nav-name{font-size:30px;font-weight:800;color:var(--white);letter-spacing:-.5px;line-height:1;}
+.nav-base{font-size:12px;font-weight:700;color:rgba(255,255,255,.85);letter-spacing:.2px;display:flex;align-items:center;gap:6px;padding-left:6px;}
+.nav-dot{width:7px;height:7px;border-radius:50%;background:var(--violet);flex-shrink:0;}
 .nav-links{display:flex;gap:2px;list-style:none;}
-.nav-links a{font-size:13.5px;color:rgba(255,255,255,.65);padding:7px 14px;border-radius:8px;transition:.18s;}
-.nav-links a:hover{background:rgba(255,255,255,.09);color:var(--white);}
+.nav-links a{font-size:15px;font-weight:700;color:var(--white);padding:7px 16px;border-radius:8px;transition:.18s;}
+.nav-links a:hover{background:rgba(255,255,255,.09);color:var(--green);}
 .nav-r{display:flex;gap:9px;align-items:center;}
 .btn-ghost{
   background:transparent;border:1px solid rgba(255,255,255,.2);
@@ -62,11 +62,11 @@ button{cursor:pointer;font-family:var(--font);}
 .btn-cta:hover{background:#1de87c;transform:translateY(-1px);}
 
 /* ── PAGES ── */
-.page{display:none;padding-top:70px;min-height:100vh;}
+.page{display:none;padding-top:88px;min-height:100vh;}
 .page.active{display:block;}
 
 /* ── HERO ── */
-.hero{position:relative;min-height:calc(100vh - 70px);display:flex;flex-direction:column;overflow:hidden;}
+.hero{position:relative;min-height:calc(100vh - 88px);display:flex;flex-direction:column;overflow:hidden;}
 .hero-bg{position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=1920&q=80') center/cover no-repeat;z-index:0;}
 .hero-ov{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,10,20,.5) 0%,rgba(0,20,38,.9) 100%);z-index:1;}
 .hero-body{position:relative;z-index:2;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;padding:80px 40px 40px;}
@@ -296,13 +296,16 @@ footer{background:var(--blue-dark);padding:56px 60px 24px;}
 <nav class="nav">
   <div style="display:flex;align-items:center;gap:28px;">
     <div class="nav-logo" onclick="go('accueil')">
-      <div class="nav-pill"><div class="nav-orb"></div><span class="nav-name">16am</span></div>
+      <div class="nav-pill">
+        <div class="nav-orb"></div>
+        <span class="nav-name">16am</span>
+      </div>
       <div class="nav-base">Diagnostics <span class="nav-dot"></span> État des lieux</div>
     </div>
     <ul class="nav-links">
-      <li><a href="#" onclick="go('prestations')">Prestations</a></li>
-      <li><a href="#" onclick="go('entreprise')">Notre entreprise</a></li>
-      <li><a href="#" onclick="go('contact')">Contact</a></li>
+      <li><a href="javascript:void(0)" onclick="go('entreprise')">Notre entreprise</a></li>
+      <li><a href="javascript:void(0)" onclick="go('prestations')">Prestations</a></li>
+      <li><a href="javascript:void(0)" onclick="go('contact')">Contact</a></li>
     </ul>
   </div>
   <div class="nav-r">
@@ -341,93 +344,12 @@ footer{background:var(--blue-dark);padding:56px 60px 24px;}
     </div>
   </section>
 
-  <!-- ── SECTION OFFRES : DIAGNOSTICS + ÉTATS DES LIEUX ── -->
-  <section style="display:grid;grid-template-columns:1fr 1fr;gap:0;">
-
-    <!-- DIAGNOSTICS -->
-    <div style="background:var(--blue);padding:60px 52px;">
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
-        <div style="width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0;"></div>
-        <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--green);">Diagnostics immobiliers</span>
-      </div>
-      <h2 style="font-size:26px;font-weight:800;color:var(--white);line-height:1.2;margin-bottom:14px;">Tous vos diagnostics réglementaires</h2>
-      <p style="font-size:14px;color:rgba(255,255,255,.6);line-height:1.75;margin-bottom:28px;">Certifiés et accrédités, nos 16 diagnostiqueurs salariés réalisent l'ensemble des diagnostics obligatoires pour la vente, la location et les travaux en Rhône-Alpes Auvergne et Bourgogne.</p>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:32px;">
-        <div style="display:flex;align-items:center;gap:8px;"><div style="width:5px;height:5px;border-radius:50%;background:var(--green);flex-shrink:0;"></div><span style="font-size:13px;color:rgba(255,255,255,.75);">DPE</span></div>
-        <div style="display:flex;align-items:center;gap:8px;"><div style="width:5px;height:5px;border-radius:50%;background:var(--green);flex-shrink:0;"></div><span style="font-size:13px;color:rgba(255,255,255,.75);">Amiante</span></div>
-        <div style="display:flex;align-items:center;gap:8px;"><div style="width:5px;height:5px;border-radius:50%;background:var(--green);flex-shrink:0;"></div><span style="font-size:13px;color:rgba(255,255,255,.75);">Plomb (CREP)</span></div>
-        <div style="display:flex;align-items:center;gap:8px;"><div style="width:5px;height:5px;border-radius:50%;background:var(--green);flex-shrink:0;"></div><span style="font-size:13px;color:rgba(255,255,255,.75);">Électricité</span></div>
-        <div style="display:flex;align-items:center;gap:8px;"><div style="width:5px;height:5px;border-radius:50%;background:var(--green);flex-shrink:0;"></div><span style="font-size:13px;color:rgba(255,255,255,.75);">Gaz</span></div>
-        <div style="display:flex;align-items:center;gap:8px;"><div style="width:5px;height:5px;border-radius:50%;background:var(--green);flex-shrink:0;"></div><span style="font-size:13px;color:rgba(255,255,255,.75);">ERP</span></div>
-        <div style="display:flex;align-items:center;gap:8px;"><div style="width:5px;height:5px;border-radius:50%;background:var(--green);flex-shrink:0;"></div><span style="font-size:13px;color:rgba(255,255,255,.75);">Surface</span></div>
-        <div style="display:flex;align-items:center;gap:8px;"><div style="width:5px;height:5px;border-radius:50%;background:var(--green);flex-shrink:0;"></div><span style="font-size:13px;color:rgba(255,255,255,.75);">PPPT</span></div>
-        <div style="display:flex;align-items:center;gap:8px;"><div style="width:5px;height:5px;border-radius:50%;background:var(--green);flex-shrink:0;"></div><span style="font-size:13px;color:rgba(255,255,255,.75);">DPE Collectif</span></div>
-        <div style="display:flex;align-items:center;gap:8px;"><div style="width:5px;height:5px;border-radius:50%;background:var(--green);flex-shrink:0;"></div><span style="font-size:13px;color:rgba(255,255,255,.75);">RAAT</span></div>
-        <div style="display:flex;align-items:center;gap:8px;"><div style="width:5px;height:5px;border-radius:50%;background:var(--green);flex-shrink:0;"></div><span style="font-size:13px;color:rgba(255,255,255,.75);">Projection DPE</span></div>
-        <div style="display:flex;align-items:center;gap:8px;"><div style="width:5px;height:5px;border-radius:50%;background:var(--green);flex-shrink:0;"></div><span style="font-size:13px;color:rgba(255,255,255,.75);">Détecteurs fumée</span></div>
-      </div>
-      <button onclick="go('choix')" style="background:var(--green);color:var(--blue-dark);border:none;padding:13px 26px;border-radius:9px;font-family:var(--font);font-size:14px;font-weight:700;cursor:pointer;transition:.2s;" onmouseover="this.style.background='#1de87c'" onmouseout="this.style.background='var(--green)'">Demander un devis →</button>
-    </div>
-
-    <!-- ÉTATS DES LIEUX -->
-    <div style="background:var(--off);padding:60px 52px;">
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
-        <div style="width:6px;height:6px;border-radius:50%;background:var(--violet);flex-shrink:0;"></div>
-        <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--violet);">États des lieux</span>
-      </div>
-      <h2 style="font-size:26px;font-weight:800;color:var(--blue);line-height:1.2;margin-bottom:14px;">Expert indépendant & impartial</h2>
-      <p style="font-size:14px;color:var(--gray);line-height:1.75;margin-bottom:28px;">Nos experts réalisent vos états des lieux d'entrée et de sortie pour les logements résidentiels et les locaux tertiaires. Un constat précis, détaillé et juridiquement opposable.</p>
-      <div style="display:flex;flex-direction:column;gap:16px;margin-bottom:32px;">
-        <div style="background:var(--white);border-radius:10px;padding:16px 20px;display:flex;align-items:flex-start;gap:14px;">
-          <div style="width:36px;height:36px;border-radius:8px;background:var(--blue);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="8" height="8" rx="1.5" stroke="#34ff9a" stroke-width="1.8"/><rect x="13" y="3" width="8" height="8" rx="1.5" stroke="#7b4cfd" stroke-width="1.8"/><rect x="3" y="13" width="8" height="8" rx="1.5" stroke="#7b4cfd" stroke-width="1.8"/><rect x="13" y="13" width="8" height="8" rx="1.5" stroke="#34ff9a" stroke-width="1.8"/></svg>
-          </div>
-          <div>
-            <div style="font-size:14px;font-weight:700;color:var(--blue);margin-bottom:3px;">Entrée & Sortie</div>
-            <div style="font-size:13px;color:var(--gray);line-height:1.5;">État des lieux contradictoire pour toute prise ou restitution de bien.</div>
-          </div>
-        </div>
-        <div style="background:var(--white);border-radius:10px;padding:16px 20px;display:flex;align-items:flex-start;gap:14px;">
-          <div style="width:36px;height:36px;border-radius:8px;background:var(--blue);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" stroke="#34ff9a" stroke-width="1.8" fill="none"/><polyline points="9 22 9 12 15 12 15 22" stroke="#7b4cfd" stroke-width="1.8" stroke-linecap="round"/></svg>
-          </div>
-          <div>
-            <div style="font-size:14px;font-weight:700;color:var(--blue);margin-bottom:3px;">Résidentiel & Tertiaire</div>
-            <div style="font-size:13px;color:var(--gray);line-height:1.5;">Appartements, maisons, bureaux, locaux commerciaux et industriels.</div>
-          </div>
-        </div>
-        <div style="background:var(--white);border-radius:10px;padding:16px 20px;display:flex;align-items:flex-start;gap:14px;">
-          <div style="width:36px;height:36px;border-radius:8px;background:var(--blue);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#34ff9a" stroke-width="1.8"/><polyline points="12 7 12 12 15 15" stroke="#7b4cfd" stroke-width="1.8" stroke-linecap="round"/></svg>
-          </div>
-          <div>
-            <div style="font-size:14px;font-weight:700;color:var(--blue);margin-bottom:3px;">Intervention rapide</div>
-            <div style="font-size:13px;color:var(--gray);line-height:1.5;">Planification rapide du lundi au vendredi, partout en Rhône-Alpes Auvergne et Bourgogne.</div>
-          </div>
-        </div>
-      </div>
-      <button onclick="go('edl')" style="background:var(--blue);color:var(--white);border:none;padding:13px 26px;border-radius:9px;font-family:var(--font);font-size:14px;font-weight:700;cursor:pointer;transition:.2s;" onmouseover="this.style.background='var(--blue-mid)'" onmouseout="this.style.background='var(--blue)'">Demander un état des lieux →</button>
-    </div>
-
-  </section>
-
   <div class="stats">
     <div class="stat"><span class="sv">16</span><span class="sl">Collaborateurs</span></div>
     <div class="stat"><span class="sv">16</span><span class="sl">Prestations</span></div>
     <div class="stat"><span class="sv">Rapide</span><span class="sl">Intervention rapide</span></div>
     <div class="stat"><span class="sv">Rapide</span><span class="sl">Devis · Réponse rapide</span></div>
   </div>
-
-  <section class="s">
-    <div class="sh">
-      <h2 class="h2">Nos 16 prestations</h2>
-      <p class="lead">Un seul partenaire pour l'ensemble de vos besoins en diagnostics immobiliers et états des lieux.</p>
-    </div>
-    <div class="pg" id="grid-home"></div>
-    <div style="text-align:center;margin-top:36px;">
-      <button class="btn btn-b" onclick="go('prestations')">Voir toutes nos prestations</button>
-    </div>
-  </section>
 
   <div class="slogan-band">
     <div class="slogan-big">Et tout devient<br>plus simple !</div>
@@ -487,7 +409,7 @@ footer{background:var(--blue-dark);padding:56px 60px 24px;}
         <li><a href="mailto:contact@16am.immo">contact@16am.immo</a></li>
         <li><a>200 rue Léon Blum</a></li>
         <li><a>69100 Villeurbanne</a></li>
-        <li><a>Lun–Ven · 8h–20h</a></li>
+        <li><a>Lun–Ven · 9h–17h</a></li>
       </ul></div>
     </div>
     <div class="ft-bot">
@@ -545,9 +467,9 @@ footer{background:var(--blue-dark);padding:56px 60px 24px;}
 ══════════════════════════════════════════ -->
 <div id="page-prestations" class="page">
   <section class="ph">
-    <span class="ph-ey">Nos 16 prestations</span>
-    <h1>Un seul partenaire, toutes les expertises</h1>
-    <p>16 prestations certifiées, intervention rapide et certifiée.</p>
+    <h1 style="font-size:clamp(36px,6vw,60px);font-weight:800;color:var(--green);line-height:1.1;margin-bottom:14px;">Nos 16 prestations</h1>
+    <p style="font-size:clamp(16px,2.5vw,22px);font-weight:600;color:var(--white);margin-bottom:10px;">Un seul partenaire, toutes les expertises</p>
+    <p style="font-size:14px;color:rgba(255,255,255,.55);">Interventions rapides et certifiées</p>
   </section>
   <section class="s">
     <div class="tabs" id="tabs-p">
@@ -648,23 +570,21 @@ footer{background:var(--blue-dark);padding:56px 60px 24px;}
 ══════════════════════════════════════════ -->
 <div id="page-client" class="page">
   <section class="ph">
-    <span class="ph-ey">Espace client</span>
-    <h1>Mon espace client</h1>
-    <p>Consultez et téléchargez vos diagnostics en toute sécurité.</p>
+    <h1 style="font-size:clamp(36px,6vw,60px);font-weight:800;color:var(--green);line-height:1.1;margin-bottom:14px;">Espace client</h1>
+    <p style="font-size:14px;color:rgba(255,255,255,.55);">Votre plateforme dédiée</p>
   </section>
   <section class="s">
     <div class="login-card" style="text-align:center;">
       <div style="width:58px;height:58px;border-radius:16px;background:var(--blue);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">
         <svg width="30" height="30" viewBox="0 0 24 24" fill="none"><path d="M3 12L12 4L21 12V20C21 20.6 20.6 21 20 21H15V16H9V21H4C3.4 21 3 20.6 3 20V12Z" stroke="#34ff9a" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </div>
-      <h2 style="font-size:20px;font-weight:800;color:var(--blue);margin-bottom:10px;">Mon espace client</h2>
-      <p style="font-size:13.5px;color:var(--gray);margin-bottom:28px;line-height:1.65;">Accédez à vos rapports et dossiers en toute sécurité.</p>
+      <h2 style="font-size:20px;font-weight:800;color:var(--blue);margin-bottom:10px;">Espace client</h2>
+      <p style="font-size:13.5px;color:var(--gray);margin-bottom:28px;line-height:1.65;">Votre plateforme dédiée</p>
       <button class="btn btn-g" style="width:100%;justify-content:center;padding:14px;font-size:15px;margin-bottom:20px;" onclick="window.open('https://app.dwell.immo','_blank')">
         Accéder à mon espace →
       </button>
-      <div style="border-top:1px solid var(--border);padding-top:16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
-        <span style="font-size:12.5px;color:var(--gray);">Pas encore client ?</span>
-        <span onclick="go('devis')" style="font-size:13px;color:var(--violet);font-weight:600;cursor:pointer;">Demander un devis gratuit →</span>
+      <div style="border-top:1px solid var(--border);padding-top:16px;text-align:center;">
+        <span onclick="go('contact')" style="font-size:13px;color:var(--violet);font-weight:600;cursor:pointer;">Pas encore client ? Contactez-nous →</span>
       </div>
     </div>
   </section>
@@ -674,10 +594,10 @@ footer{background:var(--blue-dark);padding:56px 60px 24px;}
      PAGE : NOTRE ENTREPRISE
 ══════════════════════════════════════════ -->
 <div id="page-entreprise" class="page">
-  <section class="ph">
-    <span class="ph-ey">Notre entreprise</span>
-    <h1>16AM — L'heure où tout devient clair</h1>
-    <p>Né d'une évidence : notre pôle Diagnostic méritait une identité propre.</p>
+  <section class="ph" style="padding:80px 60px 60px;">
+    <h1 style="font-size:clamp(36px,6vw,60px);font-weight:800;color:var(--green);line-height:1.1;margin-bottom:14px;">Notre entreprise</h1>
+    <p style="font-size:clamp(16px,2.5vw,22px);font-weight:600;color:var(--white);margin-bottom:10px;">16AM — L'heure où tout devient clair</p>
+    <p style="font-size:14px;color:rgba(255,255,255,.55);">Fondé en 2007 au sein d'Acticontrole, notre pôle Diagnostic a forgé 16 ans d'expertise. En 2026, il méritait enfin sa propre identité.</p>
   </section>
   <section class="s">
     <div class="about-grid">
@@ -685,11 +605,9 @@ footer{background:var(--blue-dark);padding:56px 60px 24px;}
         <p class="about-cap">Pourquoi 16AM ?</p>
         <div class="about-num">16</div>
         <p style="font-size:15px;color:var(--gray);line-height:1.75;margin-top:14px;">16, c'est notre chiffre de réalité et d'exigence. Celui de nos 16 collaborateurs salariés, de nos 16 prestations, de notre engagement quotidien.</p>
-        <div class="am-grid">
-          <div class="am-card"><div class="am-l">A</div><div class="am-t"><strong>Analyse</strong> — Expertise technique rigoureuse sur chaque intervention</div></div>
-          <div class="am-card"><div class="am-l">M</div><div class="am-t"><strong>Méthode</strong> — Processus clair, intervention rapide, zéro friction</div></div>
-          <div class="am-card"><div class="am-l">A</div><div class="am-t"><strong>Accessible</strong> — La réglementation rendue simple pour tous</div></div>
-          <div class="am-card"><div class="am-l">M</div><div class="am-t"><strong>serein</strong> — Un partenaire vraiment là pour vous</div></div>
+        <div class="am-grid" style="grid-template-columns:1fr 1fr;gap:20px;margin-top:32px;">
+          <div class="am-card" style="padding:26px 24px;border-radius:14px;"><div class="am-l" style="font-size:38px;margin-bottom:8px;">A</div><div class="am-t" style="font-size:14px;line-height:1.6;"><strong>Analyse</strong> — Expertise technique rigoureuse sur chaque intervention</div></div>
+          <div class="am-card" style="padding:26px 24px;border-radius:14px;"><div class="am-l" style="font-size:38px;margin-bottom:8px;">M</div><div class="am-t" style="font-size:14px;line-height:1.6;"><strong>Méthode</strong> — Processus clair, intervention rapide</div></div>
         </div>
       </div>
       <div style="background:var(--blue);border-radius:var(--rl);padding:36px;">
@@ -703,14 +621,11 @@ footer{background:var(--blue-dark);padding:56px 60px 24px;}
 
   <section class="s-gray">
     <div class="inner">
-      <div class="sh"><h2 class="h2">Nous intervenons exclusivement pour les professionnels</h2><p class="lead">Syndics, administrateurs de biens, agences, notaires — un seul interlocuteur.</p></div>
+      <div class="sh"><h2 class="h2">Nous intervenons exclusivement pour les professionnels</h2><p class="lead">Syndics, administrateurs de biens, agences, notaires et particuliers — un seul interlocuteur.</p></div>
       <div class="av-grid">
         <div class="av"><div class="av-ico">🔐</div><h3>Plateforme sécurisée</h3><p>Accès extranet sécurisé pour consulter et télécharger vos rapports.</p></div>
-        <div class="av"><div class="av-ico">📦</div><h3>Tarifs volume</h3><p>Conditions avantageuses pour les partenaires récurrents et gros volumes.</p></div>
-        <div class="av"><div class="av-ico">⚡</div><h3>Intervention rapide</h3><p>Intervention rapide, certifiée.</p></div>
-        <div class="av"><div class="av-ico">🏅</div><h3>Équipe 100% salariée</h3><p>16 diagnostiqueurs salariés. Aucune sous-traitance, qualité constante.</p></div>
-        <div class="av"><div class="av-ico">📅</div><h3>RDV rapide</h3><p>Intervention planifiée rapidement, du lundi au vendredi.</p></div>
-        <div class="av"><div class="av-ico">🎯</div><h3>Clé en main</h3><p>Un seul interlocuteur, de la commande à la livraison. Zéro friction.</p></div>
+        <div class="av"><div class="av-ico">⚡</div><h3>Intervention rapide</h3><p>Intervention planifiée rapidement, du lundi au vendredi.</p></div>
+        <div class="av"><div class="av-ico">🎯</div><h3>Clé en main</h3><p>Un seul interlocuteur, de la commande à la réalisation.</p></div>
       </div>
     </div>
   </section>
@@ -720,8 +635,8 @@ footer{background:var(--blue-dark);padding:56px 60px 24px;}
       <div class="sh"><h2 class="h2" style="color:var(--white);">Nous travaillons avec vous</h2><p class="lead" style="color:rgba(255,255,255,.55);">4 profils professionnels, une même exigence.</p></div>
       <div class="profils">
         <div class="profil"><div class="profil-ico">🏢</div><h3>Syndics</h3><p>Copropriétés, PPPT, parties communes. Dossiers accessibles par immeuble.</p></div>
-        <div class="profil"><div class="profil-ico">🗂️</div><h3>Admins de biens</h3><p>Suivi de parc locatif et vente, devis groupés, dossiers centralisés.</p></div>
-        <div class="profil"><div class="profil-ico">🤝</div><h3>Agences immo</h3><p>DDT pour vos mandats. Réactivité maximale pour vos signatures.</p></div>
+        <div class="profil"><div class="profil-ico">🗂️</div><h3>Admins de biens</h3><p>Location et transaction, devis groupés, dossiers centralisés.</p></div>
+        <div class="profil"><div class="profil-ico">🏠</div><h3>Particuliers</h3><p>Réalisation de vos diagnostics et de vos états des lieux.</p></div>
         <div class="profil"><div class="profil-ico">⚖️</div><h3>Notaires</h3><p>Dossiers conformes aux actes authentiques, transmis rapidement.</p></div>
       </div>
     </div>
@@ -740,9 +655,9 @@ footer{background:var(--blue-dark);padding:56px 60px 24px;}
 ══════════════════════════════════════════ -->
 <div id="page-contact" class="page">
   <section class="ph">
-    <span class="ph-ey">Contact</span>
-    <h1>Parlons de votre projet</h1>
-    <p>Notre équipe vous répond rapidement en jours ouvrés.</p>
+    <h1 style="font-size:clamp(36px,6vw,60px);font-weight:800;color:var(--green);line-height:1.1;margin-bottom:14px;">Contact</h1>
+    <p style="font-size:clamp(16px,2.5vw,22px);font-weight:600;color:var(--white);margin-bottom:10px;">Parlons de votre projet</p>
+    <p style="font-size:14px;color:rgba(255,255,255,.55);">Notre équipe vous répond rapidement en jours ouvrés.</p>
   </section>
   <section class="s">
     <div class="contact-grid">
@@ -751,22 +666,22 @@ footer{background:var(--blue-dark);padding:56px 60px 24px;}
         <div class="ci"><div class="ci-ico">📞</div><div><div class="ci-t">Téléphone</div><div class="ci-v"><a href="tel:+33478737309">04 78 73 73 09</a></div></div></div>
         <div class="ci"><div class="ci-ico">✉️</div><div><div class="ci-t">Email</div><div class="ci-v"><a href="mailto:contact@16am.immo">contact@16am.immo</a></div></div></div>
         <div class="ci"><div class="ci-ico">📍</div><div><div class="ci-t">Adresse</div><div class="ci-v">200 rue Léon Blum<br>69100 Villeurbanne</div></div></div>
-        <div class="ci"><div class="ci-ico">🕐</div><div><div class="ci-t">Horaires</div><div class="ci-v">Lundi – Vendredi<br>8h – 20h</div></div></div>
+        <div class="ci"><div class="ci-ico">🕐</div><div><div class="ci-t">Horaires</div><div class="ci-v">Lundi – Vendredi<br>9h – 17h</div></div></div>
         <div class="ci"><div class="ci-ico">🌍</div><div><div class="ci-t">Zone d'intervention</div><div class="ci-v">Rhône-Alpes Auvergne<br>Bourgogne</div></div></div>
       </div>
       <div class="fcard">
         <h3 style="font-size:17px;font-weight:700;color:var(--blue);margin-bottom:20px;">Envoyer un message</h3>
         <div class="fg-row" style="margin-bottom:14px;">
-          <div class="fg"><label>Nom <span>*</span></label><input type="text" placeholder="Dupont"></div>
-          <div class="fg"><label>Email <span>*</span></label><input type="email" placeholder="contact@cabinet.fr"></div>
+          <div class="fg"><label>Nom <span>*</span></label><input type="text" id="c-nom" placeholder="Dupont"></div>
+          <div class="fg"><label>Prénom <span>*</span></label><input type="text" id="c-prenom" placeholder="Jean"></div>
         </div>
-        <div class="fg"><label>Sujet</label><input type="text" placeholder="Demande de devis groupé"></div>
-        <div class="fg"><label>Message <span>*</span></label><textarea placeholder="Votre message..."></textarea></div>
-        <div class="fg-check">
-          <input type="checkbox" id="rgpd-c">
-          <label for="rgpd-c">J'accepte la <span style="color:var(--violet);">politique de confidentialité</span> de 16am.</label>
+        <div class="fg-row" style="margin-bottom:14px;">
+          <div class="fg"><label>E-mail <span>*</span></label><input type="email" id="c-email" placeholder="contact@cabinet.fr"></div>
+          <div class="fg"><label>Téléphone</label><input type="tel" id="c-tel" placeholder="06 00 00 00 00"></div>
         </div>
-        <button class="btn btn-g" style="width:100%;justify-content:center;padding:13px;" onclick="alert('✅ Message envoyé !\nNotre équipe vous répond rapidement.')">Envoyer →</button>
+        <div class="fg"><label>Société</label><input type="text" id="c-societe" placeholder="Nom de votre société"></div>
+        <div class="fg"><label>Message <span>*</span></label><textarea id="c-message" placeholder="Votre message..."></textarea></div>
+        <button class="btn btn-g" style="width:100%;justify-content:center;padding:13px;" onclick="envoyerContact()">Envoyer →</button>
       </div>
     </div>
   </section>
@@ -791,6 +706,28 @@ function connexionDwelClient() { window.open('https://app.dwell.immo','_blank');
 function confirmDevis() {
   const ref = '16AM-' + new Date().getFullYear() + '-' + Math.floor(1000+Math.random()*9000)
   alert('✅ Demande reçue !\nRéf : ' + ref + '\nNotre équipe vous recontacte rapidement.\n📞 04 78 73 73 09')
+}
+function envoyerContact() {
+  const nom     = document.getElementById('c-nom').value.trim();
+  const prenom  = document.getElementById('c-prenom').value.trim();
+  const email   = document.getElementById('c-email').value.trim();
+  const tel     = document.getElementById('c-tel').value.trim();
+  const societe = document.getElementById('c-societe').value.trim();
+  const message = document.getElementById('c-message').value.trim();
+  if (!nom || !prenom || !email || !message) {
+    alert('⚠️ Merci de remplir les champs obligatoires (Nom, Prénom, E-mail, Message).');
+    return;
+  }
+  const sujet = encodeURIComponent('Nouveau message depuis le site 16am');
+  const corps = encodeURIComponent(
+    'Nom : ' + nom + '\n' +
+    'Prénom : ' + prenom + '\n' +
+    'E-mail : ' + email + '\n' +
+    'Téléphone : ' + (tel || 'Non renseigné') + '\n' +
+    'Société : ' + (societe || 'Non renseignée') + '\n\n' +
+    'Message :\n' + message
+  );
+  window.location.href = 'mailto:contact@16am.immo?subject=' + sujet + '&body=' + corps;
 }
 function confirmEDL() {
   const ref = '16AM-EDL-' + new Date().getFullYear() + '-' + Math.floor(1000+Math.random()*9000)
