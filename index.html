@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>16am — Diagnostics & États des lieux</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <style>
 /* ── CHARTE OFFICIELLE BRANDBOOK 16AM ── */
 :root{
@@ -280,9 +279,20 @@ footer{background:var(--blue-dark);padding:56px 60px 24px;}
   .ft{grid-template-columns:1fr 1fr;gap:32px;}
   .stats{grid-template-columns:repeat(2,1fr);}
 }
+.nav-burger{display:none;background:none;border:none;cursor:pointer;padding:8px;flex-direction:column;gap:5px;}
+.nav-burger span{display:block;width:24px;height:2.5px;background:var(--white);border-radius:2px;transition:.25s;}
+.nav-burger.open span:nth-child(1){transform:translateY(7.5px) rotate(45deg);}
+.nav-burger.open span:nth-child(2){opacity:0;}
+.nav-burger.open span:nth-child(3){transform:translateY(-7.5px) rotate(-45deg);}
+.nav-mobile-panel{display:none;position:fixed;top:92px;left:0;right:0;bottom:0;background:#001f2e;z-index:998;padding:24px;flex-direction:column;gap:4px;overflow-y:auto;}
+.nav-mobile-panel.open{display:flex;}
+.nav-mobile-panel a{display:block;padding:16px 14px;font-size:18px;font-weight:700;color:var(--white);border-bottom:1px solid rgba(255,255,255,.08);cursor:pointer;}
+.nav-mobile-panel .nav-mobile-btns{display:flex;flex-direction:column;gap:12px;margin-top:20px;}
 @media(max-width:640px){
   .nav{padding:0 18px;}
   .nav-links{display:none;}
+  .nav-r{display:none;}
+  .nav-burger{display:flex;}
   .s,.s-blue,.s-gray,.s-grad,.slogan-band,.ph,footer{padding-left:18px;padding-right:18px;}
   .s,.s-blue,.s-gray,.s-grad{padding-top:52px;padding-bottom:52px;}
   .pg{grid-template-columns:1fr;}
@@ -350,7 +360,21 @@ footer{background:var(--blue-dark);padding:56px 60px 24px;}
     </button>
     <button class="btn-cta" onclick="go('devis')">Devis gratuit</button>
   </div>
+  <button class="nav-burger" id="nav-burger" onclick="toggleMobileMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+
+<!-- ══ MENU MOBILE ══ -->
+<div class="nav-mobile-panel" id="nav-mobile-panel">
+  <a onclick="go('entreprise'); closeMobileMenu();">Notre entreprise</a>
+  <a onclick="go('prestations'); closeMobileMenu();">Prestations</a>
+  <a onclick="go('contact'); closeMobileMenu();">Contact</a>
+  <a onclick="go('client'); closeMobileMenu();">Mon espace</a>
+  <div class="nav-mobile-btns">
+    <button class="btn btn-g" style="width:100%;justify-content:center;padding:14px;" onclick="go('devis'); closeMobileMenu();">Devis gratuit</button>
+  </div>
+</div>
 
 <!-- ══════════════════════════════════════════
      PAGE : ACCUEIL
@@ -762,19 +786,28 @@ function go(id) {
   if (p) { p.classList.add('active'); window.scrollTo(0,0); }
   if (id === 'prestations') renderGrid('grid-presta', PRESTATIONS)
   if (id === 'accueil')     renderGrid('grid-home',   PRESTATIONS)
+  closeMobileMenu();
+}
+
+/* ── MENU MOBILE (hamburger) ── */
+function toggleMobileMenu() {
+  document.getElementById('nav-burger').classList.toggle('open');
+  document.getElementById('nav-mobile-panel').classList.toggle('open');
+}
+function closeMobileMenu() {
+  const burger = document.getElementById('nav-burger');
+  const panel = document.getElementById('nav-mobile-panel');
+  if (burger) burger.classList.remove('open');
+  if (panel) panel.classList.remove('open');
 }
 
 /* ── CONNEXION ESPACE CLIENT ── */
 function connexionDwel() { window.open('https://app.dwell.immo','_blank'); }
 function connexionDwelClient() { window.open('https://app.dwell.immo','_blank'); }
 
-/* ── CONFIGURATION EMAILJS ── */
-/* ⚠️ À REMPLACER avec tes identifiants EmailJS (emailjs.com → Account → API Keys) */
-const EMAILJS_PUBLIC_KEY  = 'TON_PUBLIC_KEY';
-const EMAILJS_SERVICE_ID  = 'TON_SERVICE_ID';
-const EMAILJS_TEMPLATE_ID = 'TON_TEMPLATE_ID';
-
-if (window.emailjs) { emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY }); }
+/* ── CONFIGURATION BACKEND ── */
+/* ⚠️ Remplacer par l'URL Railway une fois le backend déployé (ex: https://16am-backend-production.up.railway.app) */
+const API_URL = 'https://TON-BACKEND.up.railway.app';
 
 function setBtnLoading(id, loading, labelDefault) {
   const btn = document.getElementById(id);
@@ -785,20 +818,27 @@ function setBtnLoading(id, loading, labelDefault) {
   btn.textContent = loading ? 'Envoi en cours...' : labelDefault;
 }
 
-function envoyerEmail(params, btnId, btnLabel, refPrefix, successMsg) {
+function envoyerFormulaire(endpoint, payload, btnId, btnLabel, successMsg) {
   setBtnLoading(btnId, true, btnLabel);
-  const ref = refPrefix + '-' + new Date().getFullYear() + '-' + Math.floor(1000 + Math.random() * 9000);
-  const fullParams = Object.assign({}, params, { reference: ref });
 
-  emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, fullParams)
-    .then(function () {
+  fetch(API_URL + endpoint, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  })
+    .then(function (res) { return res.json().then(function (data) { return { status: res.status, data: data }; }); })
+    .then(function (result) {
       setBtnLoading(btnId, false, btnLabel);
-      alert('✅ Demande envoyée !\nRéf : ' + ref + '\n' + successMsg);
+      if (result.data && result.data.ok) {
+        alert('✅ Demande envoyée !\nRéf : ' + result.data.ref + '\n' + successMsg);
+      } else {
+        alert('⚠️ ' + (result.data.error || "Une erreur est survenue. Merci de réessayer ou de nous appeler directement au 04 78 73 73 09."));
+      }
     })
     .catch(function (err) {
       setBtnLoading(btnId, false, btnLabel);
-      console.error('Erreur EmailJS:', err);
-      alert('⚠️ Une erreur est survenue lors de l\'envoi.\nMerci de réessayer ou de nous appeler directement au 04 78 73 73 09.');
+      console.error('Erreur réseau:', err);
+      alert('⚠️ Impossible de joindre le serveur.\nMerci de réessayer ou de nous appeler directement au 04 78 73 73 09.');
     });
 }
 
@@ -816,20 +856,18 @@ function confirmDevis() {
     alert('⚠️ Merci d\'accepter la politique de confidentialité pour continuer.');
     return;
   }
-  const params = {
-    form_type: 'DEVIS',
-    subject_line: 'Nouvelle demande de DEVIS — 16am',
+  const payload = {
     prestation: document.getElementById('d-prestation').value,
     bien: document.getElementById('d-bien').value,
     surface: document.getElementById('d-surface').value,
-    type_bien: document.getElementById('d-type').value,
+    type: document.getElementById('d-type').value,
     motif: document.getElementById('d-motif').value,
     prenom: prenom,
     nom: nom,
     email: email,
     telephone: tel,
   };
-  envoyerEmail(params, 'btn-devis', 'Envoyer ma demande →', '16AM-DEVIS', 'Notre équipe vous recontacte rapidement.\n📞 04 78 73 73 09');
+  envoyerFormulaire('/api/devis', payload, 'btn-devis', 'Envoyer ma demande →', 'Notre équipe vous recontacte rapidement.\n📞 04 78 73 73 09');
 }
 
 /* ── FORMULAIRE ÉTAT DES LIEUX ── */
@@ -847,19 +885,17 @@ function confirmEDL() {
     alert('⚠️ Merci d\'accepter la politique de confidentialité pour continuer.');
     return;
   }
-  const params = {
-    form_type: 'ÉTAT DES LIEUX',
-    subject_line: "Nouvelle demande d'ÉTAT DES LIEUX — 16am",
-    type_bien: document.getElementById('e-bien').value,
-    type_edl: document.getElementById('e-type').value,
+  const payload = {
+    typeBien: document.getElementById('e-bien').value,
+    typeEDL: document.getElementById('e-type').value,
     adresse: adresse,
-    date_souhaitee: document.getElementById('e-date').value || 'Non renseignée',
+    dateSouhaitee: document.getElementById('e-date').value || 'Non renseignée',
     prenom: prenom,
     nom: nom,
     email: email,
     telephone: tel,
   };
-  envoyerEmail(params, 'btn-edl', 'Envoyer ma demande →', '16AM-EDL', 'Nous vous recontactons rapidement.');
+  envoyerFormulaire('/api/edl', payload, 'btn-edl', 'Envoyer ma demande →', 'Nous vous recontactons rapidement.');
 }
 
 /* ── FORMULAIRE CONTACT ── */
@@ -874,17 +910,15 @@ function envoyerContact() {
     alert('⚠️ Merci de remplir les champs obligatoires (Nom, Prénom, E-mail, Message).');
     return;
   }
-  const params = {
-    form_type: 'CONTACT',
-    subject_line: 'Nouveau message CONTACT — 16am',
+  const payload = {
     nom: nom,
     prenom: prenom,
     email: email,
-    telephone: tel || 'Non renseigné',
-    societe: societe || 'Non renseignée',
+    telephone: tel,
+    societe: societe,
     message: message,
   };
-  envoyerEmail(params, 'btn-contact', 'Envoyer →', '16AM-CONTACT', 'Notre équipe vous répond en 24 heures.');
+  envoyerFormulaire('/api/contact', payload, 'btn-contact', 'Envoyer →', 'Notre équipe vous répond en 24 heures.');
 }
 
 /* ── SVG PICTOGRAMMES OFFICIELS BRANDBOOK ── */
